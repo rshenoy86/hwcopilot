@@ -28,7 +28,7 @@ export default function DashboardNav({ profile, userEmail }: DashboardNavProps) 
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-card border-b border-border shadow-sm no-print">
+    <header className="sticky top-0 z-40 bg-white border-b border-border shadow-sm no-print">
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
