@@ -21,31 +21,36 @@ export async function createCheckoutSession() {
 
   if (!profile) redirect("/onboarding");
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price: process.env.STRIPE_PRICE_ID_PRO!,
-        quantity: 1,
-      },
-    ],
-    customer: profile.stripe_customer_id || undefined,
-    customer_email: !profile.stripe_customer_id ? user.email : undefined,
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?success=true`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?canceled=true`,
-    metadata: {
-      user_id: user.id,
-    },
-    subscription_data: {
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      line_items: [
+        {
+          price: process.env.STRIPE_PRICE_ID_PRO!,
+          quantity: 1,
+        },
+      ],
+      customer: profile.stripe_customer_id || undefined,
+      customer_email: !profile.stripe_customer_id ? user.email : undefined,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?canceled=true`,
       metadata: {
         user_id: user.id,
       },
-    },
-  });
+      subscription_data: {
+        metadata: {
+          user_id: user.id,
+        },
+      },
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Failed to create checkout session";
+    return { error: msg };
+  }
 
   if (!session.url) {
-    return { error: "Failed to create checkout session" };
+    return { error: "Stripe did not return a checkout URL. Please try again." };
   }
 
   redirect(session.url);
