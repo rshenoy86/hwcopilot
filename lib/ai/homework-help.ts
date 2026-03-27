@@ -14,23 +14,35 @@ export interface HomeworkHelpParams {
   simplifyExplanation?: boolean;
 }
 
-// Simple in-memory rate limiter
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+// In-memory rate limiters
+const minuteRateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const dailyRateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function checkRateLimit(userId: string): boolean {
   const now = Date.now();
-  const limit = rateLimitMap.get(userId);
 
-  if (!limit || now > limit.resetAt) {
-    rateLimitMap.set(userId, { count: 1, resetAt: now + 60000 });
-    return true;
-  }
-
-  if (limit.count >= 10) {
+  // Per-minute limit (10/min)
+  const minute = minuteRateLimitMap.get(userId);
+  if (!minute || now > minute.resetAt) {
+    minuteRateLimitMap.set(userId, { count: 1, resetAt: now + 60000 });
+  } else if (minute.count >= 10) {
     return false;
+  } else {
+    minute.count++;
   }
 
-  limit.count++;
+  // Daily limit (50/day)
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const daily = dailyRateLimitMap.get(userId);
+  if (!daily || now > daily.resetAt) {
+    dailyRateLimitMap.set(userId, { count: 1, resetAt: startOfDay.getTime() + 86400000 });
+  } else if (daily.count >= 50) {
+    return false;
+  } else {
+    daily.count++;
+  }
+
   return true;
 }
 

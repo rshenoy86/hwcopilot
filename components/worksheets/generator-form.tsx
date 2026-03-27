@@ -453,7 +453,7 @@ export default function WorksheetGeneratorForm({
         {subject && scaffoldingOptions.length > 0 && (
           <div className="space-y-2">
             <Label>
-              Scaffolding options{" "}
+              Question options{" "}
               <span className="text-muted-foreground font-normal">(optional — select any that apply)</span>
             </Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
