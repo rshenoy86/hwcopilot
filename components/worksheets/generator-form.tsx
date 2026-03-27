@@ -33,6 +33,202 @@ const DIFFICULTY_OPTIONS = [
 
 const QUESTION_COUNTS = [6, 8, 10];
 
+// Scaffolding options per subject category
+const SCAFFOLDING_OPTIONS: Record<string, { id: string; label: string; description: string; instruction: string }[]> = {
+  ELA: [
+    {
+      id: "dyslexia",
+      label: "Dyslexia-friendly",
+      description: "Shorter sentences, extra spacing, simpler layout",
+      instruction: "Format for dyslexia support: use very short sentences, simple common words, extra line spacing between items, and avoid dense text blocks.",
+    },
+    {
+      id: "word_bank",
+      label: "Include word bank",
+      description: "Provide a list of key words to choose from",
+      instruction: "Include a word bank at the top of the YOUR TURN section with 8-10 relevant vocabulary words for students to reference.",
+    },
+    {
+      id: "sentence_starters",
+      label: "Sentence starters",
+      description: "Give the first few words of each answer",
+      instruction: "For writing problems, provide sentence starters (e.g. 'The main idea is...', 'First, the author...') to help students begin their answers.",
+    },
+    {
+      id: "visual_cues",
+      label: "Visual cues",
+      description: "Add emojis or symbols to guide reading",
+      instruction: "Use visual cues like emojis, arrows, and symbols alongside instructions to help visual learners navigate the worksheet.",
+    },
+  ],
+  "ELA / Phonics": [
+    {
+      id: "dyslexia",
+      label: "Dyslexia-friendly",
+      description: "Shorter sentences, extra spacing, simpler layout",
+      instruction: "Format for dyslexia support: use very short sentences, simple common words, extra line spacing between items, and avoid dense text blocks.",
+    },
+    {
+      id: "word_bank",
+      label: "Include word bank",
+      description: "Provide a list of key words to choose from",
+      instruction: "Include a word bank at the top of the YOUR TURN section with 8-10 relevant vocabulary words for students to reference.",
+    },
+    {
+      id: "tracing_lines",
+      label: "Extra writing lines",
+      description: "More space to trace or write letters",
+      instruction: "Provide extra-wide writing lines and additional space for each answer to support handwriting practice.",
+    },
+    {
+      id: "picture_support",
+      label: "Picture word support",
+      description: "Describe a picture clue for each problem",
+      instruction: "For each problem, include a brief description of a simple picture clue in brackets like [Picture: a cat] to support word recognition.",
+    },
+  ],
+  Reading: [
+    {
+      id: "dyslexia",
+      label: "Dyslexia-friendly",
+      description: "Shorter sentences, extra spacing, simpler layout",
+      instruction: "Format for dyslexia support: use very short sentences, simple common words, extra line spacing between items, and avoid dense text blocks.",
+    },
+    {
+      id: "word_bank",
+      label: "Include word bank",
+      description: "Provide key vocabulary words",
+      instruction: "Include a word bank with definitions of 6-8 key vocabulary words from the reading passage.",
+    },
+    {
+      id: "shorter_passage",
+      label: "Shorter passage",
+      description: "Use a briefer reading passage",
+      instruction: "Use a very short reading passage (3-4 sentences maximum) to reduce cognitive load while still practicing comprehension.",
+    },
+    {
+      id: "sentence_starters",
+      label: "Sentence starters",
+      description: "Give the first few words of each answer",
+      instruction: "For writing problems, provide sentence starters (e.g. 'The main idea is...', 'First, the author...') to help students begin their answers.",
+    },
+  ],
+  Math: [
+    {
+      id: "show_work",
+      label: "Show work boxes",
+      description: "Add a box under each problem for work",
+      instruction: "After each problem, include a labeled 'Show your work:' box with extra space for students to write out their steps.",
+    },
+    {
+      id: "step_by_step",
+      label: "Step-by-step scaffolding",
+      description: "Break problems into guided steps",
+      instruction: "Break multi-step problems into labeled sub-steps (Step 1: ___, Step 2: ___, Answer: ___) so students can follow along.",
+    },
+    {
+      id: "smaller_numbers",
+      label: "Simplified numbers",
+      description: "Use smaller, friendlier numbers",
+      instruction: "Use smaller, rounder numbers throughout (single digits for K-2, two digits max for 3-5) to reduce arithmetic difficulty and focus on the concept.",
+    },
+    {
+      id: "visual_models",
+      label: "Visual model prompts",
+      description: "Prompt students to draw a picture or diagram",
+      instruction: "For each problem, add 'Draw a picture or diagram to help you solve:' with a blank box, encouraging visual-spatial problem solving.",
+    },
+  ],
+  Science: [
+    {
+      id: "word_bank",
+      label: "Include word bank",
+      description: "Provide key science vocabulary",
+      instruction: "Include a word bank at the top with 8-10 key science vocabulary words and brief definitions.",
+    },
+    {
+      id: "fill_in_blank",
+      label: "Fill-in-the-blank format",
+      description: "Partial answers with blanks to complete",
+      instruction: "Format answers as fill-in-the-blank sentences where possible (e.g. 'Photosynthesis uses _____ and _____ to make food.') instead of open-ended questions.",
+    },
+    {
+      id: "simplified_vocab",
+      label: "Simplified vocabulary",
+      description: "Use everyday words alongside science terms",
+      instruction: "Whenever a science term is used, immediately follow it with a simple everyday definition in parentheses (e.g. 'photosynthesis (how plants make food)').",
+    },
+    {
+      id: "sentence_starters",
+      label: "Sentence starters",
+      description: "Give the beginning of each answer",
+      instruction: "Provide sentence starters for all written responses to help students structure their answers.",
+    },
+  ],
+  "Social Studies": [
+    {
+      id: "word_bank",
+      label: "Include word bank",
+      description: "Provide key terms and names",
+      instruction: "Include a word bank with 8-10 key terms, names, and dates relevant to the topic.",
+    },
+    {
+      id: "fill_in_blank",
+      label: "Fill-in-the-blank format",
+      description: "Partial answers with blanks to complete",
+      instruction: "Format answers as fill-in-the-blank sentences where possible instead of open-ended questions.",
+    },
+    {
+      id: "simplified_vocab",
+      label: "Simplified vocabulary",
+      description: "Plain language alongside terms",
+      instruction: "Whenever a social studies term is used, follow it with a plain-language explanation in parentheses.",
+    },
+    {
+      id: "sentence_starters",
+      label: "Sentence starters",
+      description: "Give the beginning of each answer",
+      instruction: "Provide sentence starters for all written responses.",
+    },
+  ],
+  Writing: [
+    {
+      id: "dyslexia",
+      label: "Dyslexia-friendly",
+      description: "Shorter sentences, extra spacing",
+      instruction: "Format for dyslexia support: use very short sentences, simple common words, and extra line spacing.",
+    },
+    {
+      id: "sentence_starters",
+      label: "Sentence starters",
+      description: "Give the first few words of each answer",
+      instruction: "Provide sentence starters for all writing prompts.",
+    },
+    {
+      id: "word_bank",
+      label: "Include word bank",
+      description: "Provide helpful vocabulary words",
+      instruction: "Include a word bank of 8-10 useful words related to the writing topic.",
+    },
+    {
+      id: "extra_lines",
+      label: "Extra writing lines",
+      description: "More space to write",
+      instruction: "Provide extra writing lines (at least 5-6 blank lines) for each writing response.",
+    },
+  ],
+};
+
+function getScaffoldingForSubject(subject: string) {
+  // Match by subject name or return Math defaults for unknown subjects
+  for (const key of Object.keys(SCAFFOLDING_OPTIONS)) {
+    if (subject.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(subject.toLowerCase())) {
+      return SCAFFOLDING_OPTIONS[key];
+    }
+  }
+  return SCAFFOLDING_OPTIONS["Math"];
+}
+
 export default function WorksheetGeneratorForm({
   children,
   preselectedChildId,
@@ -49,20 +245,30 @@ export default function WorksheetGeneratorForm({
   const [difficulty, setDifficulty] = useState<"1" | "2" | "3">("2");
   const [numQuestions, setNumQuestions] = useState<6 | 8 | 10>(8);
   const [specialInstructions, setSpecialInstructions] = useState("");
+  const [activeScaffolding, setActiveScaffolding] = useState<string[]>([]);
 
   const selectedChild = children.find((c) => c.id === selectedChildId);
   const availableSubjects = selectedChild ? getSubjectsForGrade(selectedChild.grade) : [];
   const availableTopics = selectedChild && subject ? getTopicsForSubjectAndGrade(selectedChild.grade, subject) : [];
+  const scaffoldingOptions = subject ? getScaffoldingForSubject(subject) : [];
 
   function handleChildChange(childId: string) {
     setSelectedChildId(childId);
     setSubject("");
     setTopic("");
+    setActiveScaffolding([]);
   }
 
   function handleSubjectChange(s: string) {
     setSubject(s);
     setTopic("");
+    setActiveScaffolding([]);
+  }
+
+  function toggleScaffolding(id: string) {
+    setActiveScaffolding((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    );
   }
 
   async function handleGenerate() {
@@ -72,6 +278,13 @@ export default function WorksheetGeneratorForm({
     }
     setError(null);
     setLoading(true);
+
+    // Build special instructions from scaffolding + any manual input
+    const scaffoldInstructions = activeScaffolding
+      .map((id) => scaffoldingOptions.find((o) => o.id === id)?.instruction)
+      .filter(Boolean)
+      .join(" ");
+    const combinedInstructions = [scaffoldInstructions, specialInstructions].filter(Boolean).join(" ");
 
     try {
       const response = await fetch("/api/worksheets/generate", {
@@ -83,7 +296,7 @@ export default function WorksheetGeneratorForm({
           topic,
           difficulty: parseInt(difficulty) as 1 | 2 | 3,
           numQuestions,
-          specialInstructions: specialInstructions || undefined,
+          specialInstructions: combinedInstructions || undefined,
         }),
       });
 
@@ -200,7 +413,7 @@ export default function WorksheetGeneratorForm({
                 key={opt.value}
                 type="button"
                 onClick={() => setDifficulty(opt.value as "1" | "2" | "3")}
-                className={`p-3 rounded-lg border text-left transition-all ${
+                className={`p-3 rounded-lg border text-left transition-all active:scale-95 ${
                   difficulty === opt.value
                     ? "border-primary bg-accent ring-1 ring-primary"
                     : "border-border hover:border-primary/50"
@@ -224,7 +437,7 @@ export default function WorksheetGeneratorForm({
                 key={n}
                 type="button"
                 onClick={() => setNumQuestions(n as 6 | 8 | 10)}
-                className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-all ${
+                className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-all active:scale-95 ${
                   numQuestions === n
                     ? "border-primary bg-accent ring-1 ring-primary"
                     : "border-border hover:border-primary/50"
@@ -236,10 +449,49 @@ export default function WorksheetGeneratorForm({
           </div>
         </div>
 
+        {/* Scaffolding options */}
+        {subject && scaffoldingOptions.length > 0 && (
+          <div className="space-y-2">
+            <Label>
+              Scaffolding options{" "}
+              <span className="text-muted-foreground font-normal">(optional — select any that apply)</span>
+            </Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {scaffoldingOptions.map((opt) => {
+                const active = activeScaffolding.includes(opt.id);
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => toggleScaffolding(opt.id)}
+                    className={`p-3 rounded-lg border text-left transition-all active:scale-95 ${
+                      active
+                        ? "border-primary bg-accent ring-1 ring-primary"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                        active ? "border-primary bg-primary" : "border-muted-foreground"
+                      }`}>
+                        {active && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                      </div>
+                      <span className="text-sm font-medium">{opt.label}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1 ml-6 leading-tight">
+                      {opt.description}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Special instructions */}
         <div className="space-y-1.5">
           <Label>
-            Special instructions{" "}
+            Additional instructions{" "}
             <span className="text-muted-foreground font-normal">(optional)</span>
           </Label>
           <Textarea
