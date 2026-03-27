@@ -79,46 +79,70 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 px-4 bg-secondary/30">
+      <section className="py-24 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold">Done in 3 steps</h2>
-            <p className="text-muted-foreground mt-2">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold">Done in 3 steps</h2>
+            <p className="text-muted-foreground mt-3 text-lg">
               From signup to printed worksheet in under 2 minutes.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6">
+            {/* Dashed connector line */}
+            <div className="hidden md:block absolute top-12 left-[calc(33%+2rem)] right-[calc(33%+2rem)] border-t-2 border-dashed border-slate-300" />
+
             {[
               {
                 step: "1",
-                icon: <BookOpen className="h-6 w-6 text-primary" />,
+                gradient: "from-blue-500 to-indigo-600",
+                shadow: "shadow-blue-200",
+                Icon: BookOpen,
                 title: "Add your child",
                 description: "Tell us their grade, the subjects you want to practice, and what they love. Takes 60 seconds.",
+                tags: ["Grade K–8", "Any subject"],
               },
               {
                 step: "2",
-                icon: <Sparkles className="h-6 w-6 text-primary" />,
+                gradient: "from-violet-500 to-purple-600",
+                shadow: "shadow-violet-200",
+                Icon: Sparkles,
                 title: "Pick a subject",
                 description: "Choose a subject and topic from our curriculum-aligned list, set the difficulty, and hit generate.",
+                tags: ["Math", "Science", "ELA"],
               },
               {
                 step: "3",
-                icon: <Printer className="h-6 w-6 text-primary" />,
+                gradient: "from-emerald-500 to-teal-600",
+                shadow: "shadow-emerald-200",
+                Icon: Printer,
                 title: "Print and practice",
                 description: "Your personalized worksheet is ready instantly. Print it, and watch your kid actually enjoy it.",
+                tags: ["30 seconds", "Answer key"],
               },
             ].map((item) => (
               <div key={item.step} className="flex flex-col items-center text-center">
-                <div className="relative mb-5">
-                  <div className="h-16 w-16 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center">
-                    {item.icon}
+                {/* Icon circle */}
+                <div className="relative mb-6">
+                  <div className={`h-24 w-24 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-xl ${item.shadow}`}>
+                    <item.Icon className="h-10 w-10 text-white" />
                   </div>
-                  <div className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shadow-sm">
+                  <div className="absolute -top-1.5 -right-1.5 h-7 w-7 rounded-full bg-amber-400 text-white text-sm font-bold flex items-center justify-center shadow-md border-2 border-white">
                     {item.step}
                   </div>
                 </div>
-                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+
+                {/* Tags */}
+                <div className="flex gap-1.5 mb-4 flex-wrap justify-center">
+                  {item.tags.map((tag) => (
+                    <span key={tag} className="text-xs font-medium bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <h3 className="font-bold text-xl mb-2">{item.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed max-w-[230px]">{item.description}</p>
               </div>
             ))}
           </div>
