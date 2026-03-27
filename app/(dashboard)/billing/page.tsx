@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { CheckCircle, Zap } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getResetDate } from "@/lib/utils";
 import BillingButtons from "@/components/dashboard/billing-buttons";
 import type { Profile } from "@/types";
 
@@ -37,8 +37,7 @@ export default async function BillingPage({ searchParams }: PageProps) {
     Math.round((p.worksheets_generated_this_month / p.worksheet_monthly_limit) * 100)
   );
 
-  const resetDate = new Date(p.month_reset_date);
-  resetDate.setMonth(resetDate.getMonth() + 1);
+  const resetDate = getResetDate(p.month_reset_date);
 
   const isPro = p.subscription_status === "pro";
 

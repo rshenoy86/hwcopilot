@@ -18,7 +18,12 @@ export default function BillingButtons({ isPro, showUpgradeOnly }: BillingButton
     setLoading(true);
     setError(null);
     try {
-      await createCheckoutSession();
+      const result = await createCheckoutSession();
+      if (result?.error) {
+        setError(result.error);
+        setLoading(false);
+      }
+      // If no error returned, a redirect happened — loading stays true briefly
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
       if (!msg.includes("NEXT_REDIRECT")) {

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Plus, MessageCircle, ArrowRight, Zap } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getResetDate } from "@/lib/utils";
 import type { Child, Worksheet } from "@/types";
 
 export default async function DashboardPage() {
@@ -47,8 +47,7 @@ export default async function DashboardPage() {
   const isNearLimit = profile.subscription_status === "free" && profile.worksheets_generated_this_month >= 4;
   const isAtLimit = profile.worksheets_generated_this_month >= profile.worksheet_monthly_limit;
 
-  const resetDate = new Date(profile.month_reset_date);
-  resetDate.setMonth(resetDate.getMonth() + 1);
+  const resetDate = getResetDate(profile.month_reset_date);
 
   return (
     <div className="space-y-8">

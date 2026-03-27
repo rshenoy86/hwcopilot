@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getFirstOfCurrentMonth } from "@/lib/utils";
+import { getTodayString } from "@/lib/utils";
 import { z } from "zod";
 
 const onboardingSchema = z.object({
@@ -40,7 +40,7 @@ export async function completeOnboarding(data: {
     subscription_status: "free",
     worksheets_generated_this_month: 0,
     worksheet_monthly_limit: 5,
-    month_reset_date: getFirstOfCurrentMonth(),
+    month_reset_date: getTodayString(),
   });
 
   if (profileError) {

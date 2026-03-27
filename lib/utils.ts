@@ -13,12 +13,26 @@ export function formatDate(date: Date | string): string {
   });
 }
 
-export function getFirstOfNextMonth(): Date {
+export function getTodayString(): string {
   const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
+// Returns the reset date: 30 days after the period start date
+export function getResetDate(periodStartDate: string): Date {
+  const start = new Date(periodStartDate);
+  const reset = new Date(start);
+  reset.setDate(reset.getDate() + 30);
+  return reset;
+}
+
+// Check if the 30-day period has expired
+export function isPeriodExpired(periodStartDate: string): boolean {
+  const resetDate = getResetDate(periodStartDate);
+  return new Date() >= resetDate;
+}
+
+// Keep for backwards compatibility
 export function getFirstOfCurrentMonth(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+  return getTodayString();
 }

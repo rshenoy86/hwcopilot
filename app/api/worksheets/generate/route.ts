@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { generateWorksheet } from "@/lib/ai/worksheet";
-import { getFirstOfCurrentMonth } from "@/lib/utils";
+import { getTodayString, isPeriodExpired } from "@/lib/utils";
 import { z } from "zod";
 
 const schema = z.object({
@@ -47,18 +47,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Profile not found" }, { status: 404 });
   }
 
-  // Check if we need to reset the monthly counter
-  const currentMonth = getFirstOfCurrentMonth();
-  if (profile.month_reset_date < currentMonth) {
+  // Check if 30-day period has expired — if so, reset the counter
+  if (isPeriodExpired(profile.month_reset_date)) {
+    const today = getTodayString();
     await supabase
       .from("profiles")
       .update({
         worksheets_generated_this_month: 0,
-        month_reset_date: currentMonth,
+        month_reset_date: today,
       })
       .eq("user_id", user.id);
     profile.worksheets_generated_this_month = 0;
-    profile.month_reset_date = currentMonth;
+    profile.month_reset_date = today;
   }
 
   // Check limit
