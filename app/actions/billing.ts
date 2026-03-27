@@ -1,8 +1,16 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { stripe } from "@/lib/stripe";
+
+async function getBaseUrl(): Promise<string> {
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "hwcopilot.vercel.app";
+  const proto = headersList.get("x-forwarded-proto") ?? "https";
+  return `${proto}://${host}`;
+}
 
 export async function createCheckoutSession() {
   const supabase = await createClient();
@@ -21,6 +29,8 @@ export async function createCheckoutSession() {
 
   if (!profile) redirect("/onboarding");
 
+  const baseUrl = await getBaseUrl();
+
   let session;
   try {
     session = await stripe.checkout.sessions.create({
@@ -33,8 +43,8 @@ export async function createCheckoutSession() {
       ],
       customer: profile.stripe_customer_id || undefined,
       customer_email: !profile.stripe_customer_id ? user.email : undefined,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?canceled=true`,
+      success_url: `${baseUrl}/billing?success=true`,
+      cancel_url: `${baseUrl}/billing?canceled=true`,
       metadata: {
         user_id: user.id,
       },
@@ -75,9 +85,11 @@ export async function createPortalSession() {
     return { error: "No billing account found" };
   }
 
+  const baseUrl = await getBaseUrl();
+
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: profile.stripe_customer_id,
-    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing`,
+    return_url: `${baseUrl}/billing`,
   });
 
   redirect(portalSession.url);
