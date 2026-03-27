@@ -1,0 +1,76 @@
+export type SubscriptionStatus = "free" | "pro";
+
+export type Grade = "K" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
+
+export interface Profile {
+  id: string;
+  user_id: string;
+  first_name: string;
+  subscription_status: SubscriptionStatus;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  worksheets_generated_this_month: number;
+  worksheet_monthly_limit: number;
+  month_reset_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Child {
+  id: string;
+  user_id: string;
+  name: string;
+  grade: Grade;
+  age: number | null;
+  subjects: string[];
+  interests: string;
+  learning_notes: string | null;
+  active: boolean;
+  created_at: string;
+}
+
+export interface Worksheet {
+  id: string;
+  user_id: string;
+  child_id: string;
+  subject: string;
+  topic: string;
+  difficulty: 1 | 2 | 3;
+  grade: Grade;
+  worksheet_type: string;
+  content: WorksheetContent;
+  answer_key: AnswerKeyItem[];
+  created_at: string;
+}
+
+export interface WorksheetContent {
+  learn_it: string;
+  worked_example: string;
+  problems: string[];
+  challenge: string;
+}
+
+export interface AnswerKeyItem {
+  number: number;
+  answer: string;
+  explanation?: string;
+}
+
+export interface HomeworkHelpSession {
+  id: string;
+  user_id: string;
+  child_id: string | null;
+  question: string;
+  response: string;
+  created_at: string;
+}
+
+export interface CurriculumSubject {
+  name: string;
+  topics: string[];
+}
+
+export interface CurriculumGradeRange {
+  grades: Grade[];
+  subjects: CurriculumSubject[];
+}
