@@ -58,11 +58,11 @@ export default function HomePage() {
             AI-powered homework practice
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-            Homework practice that actually{" "}
-            <span className="text-primary">matches what your kid is learning</span>
+            Homework practice that actually matches{" "}
+            <span className="text-primary">what your kid is learning, today</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Personalized worksheets for K–8, aligned to your child&apos;s grade and woven with the things they love. Ready to print in 30 seconds.
+            Personalized worksheets for K–8, built around your child&apos;s exact grade, current subjects, and the things they love. Ready to print in 30 seconds.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/signup">
@@ -87,38 +87,38 @@ export default function HomePage() {
               From signup to printed worksheet in under 2 minutes.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 step: "1",
-                icon: "👤",
+                icon: <BookOpen className="h-6 w-6 text-primary" />,
                 title: "Add your child",
                 description: "Tell us their grade, the subjects you want to practice, and what they love. Takes 60 seconds.",
               },
               {
                 step: "2",
-                icon: "✏️",
+                icon: <Sparkles className="h-6 w-6 text-primary" />,
                 title: "Pick a subject",
                 description: "Choose a subject and topic from our curriculum-aligned list, set the difficulty, and hit generate.",
               },
               {
                 step: "3",
-                icon: "🖨️",
+                icon: <Printer className="h-6 w-6 text-primary" />,
                 title: "Print and practice",
                 description: "Your personalized worksheet is ready instantly. Print it, and watch your kid actually enjoy it.",
               },
             ].map((item) => (
-              <div key={item.step} className="relative">
-                <div className="absolute -top-2 -left-2 h-7 w-7 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">
-                  {item.step}
+              <div key={item.step} className="flex flex-col items-center text-center">
+                <div className="relative mb-5">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center">
+                    {item.icon}
+                  </div>
+                  <div className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shadow-sm">
+                    {item.step}
+                  </div>
                 </div>
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="text-4xl mb-4">{item.icon}</div>
-                    <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
-                  </CardContent>
-                </Card>
+                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
