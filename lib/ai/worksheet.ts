@@ -32,6 +32,17 @@ const DIFFICULTY_LABELS: Record<number, string> = {
 function buildSystemPrompt(): string {
   return `You are an expert K-8 educator creating a homework practice worksheet. You create engaging, curriculum-aligned content that kids actually enjoy completing.
 
+CONTENT SAFETY — STRICTLY ENFORCED:
+All content must be fully appropriate for children aged 5–14. You must never include:
+- Violence, weapons, injury, or death (even in fictional contexts)
+- Drugs, alcohol, tobacco, or substance references
+- Sexual content, romantic scenarios, or mature themes
+- Horror, fear, or psychologically disturbing content
+- Hate speech, discrimination, or stereotypes
+- Gambling, betting, or games of chance
+- Any content inappropriate for a K-8 classroom setting
+If a child's interests or topic could lead to inappropriate content, substitute safe, school-appropriate alternatives silently. Do not comment on the substitution.
+
 Always respond with valid JSON matching this exact structure:
 {
   "learn_it": "2-4 sentence kid-friendly explanation of the concept",

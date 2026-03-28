@@ -13,8 +13,13 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   async function handleSubmit(formData: FormData) {
+    if (!agreedToTerms) {
+      setError("Please agree to the Terms of Service and Privacy Policy to continue.");
+      return;
+    }
     setError(null);
     setLoading(true);
     const result = await signUp(formData);
@@ -76,22 +81,31 @@ export default function SignupPage() {
               </div>
             </div>
 
+            <label className="flex items-start gap-2.5 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary accent-primary shrink-0"
+              />
+              <span className="text-xs text-muted-foreground leading-relaxed">
+                I am a parent or guardian (18+) and I agree to the{" "}
+                <Link href="/terms" target="_blank" className="underline hover:text-foreground">Terms of Service</Link>
+                {" "}and{" "}
+                <Link href="/privacy" target="_blank" className="underline hover:text-foreground">Privacy Policy</Link>,
+                including the use of AI to generate educational content for my child.
+              </span>
+            </label>
+
             {error && (
               <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2 text-sm text-destructive">
                 {error}
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading || !agreedToTerms}>
               {loading ? "Creating account..." : "Create account"}
             </Button>
-
-            <p className="text-xs text-center text-muted-foreground">
-              By signing up, you agree to our{" "}
-              <Link href="/terms" className="underline hover:text-foreground">Terms</Link>
-              {" "}and{" "}
-              <Link href="/privacy" className="underline hover:text-foreground">Privacy Policy</Link>
-            </p>
           </form>
         </div>
 

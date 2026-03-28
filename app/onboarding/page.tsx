@@ -204,7 +204,7 @@ export default function OnboardingPage() {
                   rows={2}
                 />
                 <p className="text-xs text-muted-foreground">
-                  We&apos;ll weave these into worksheet problems to make them more engaging!
+                  We&apos;ll weave these into worksheet problems to make them more engaging. Please keep interests school-appropriate (hobbies, sports, animals, games, etc.).
                 </p>
               </div>
 
@@ -217,9 +217,12 @@ export default function OnboardingPage() {
                   id="learningNotes"
                   value={childLearningNotes}
                   onChange={(e) => setChildLearningNotes(e.target.value)}
-                  placeholder="e.g. struggles with fractions, advanced reader, dyslexia..."
+                  placeholder="e.g. struggles with fractions, advanced reader, dyslexia, benefits from visual examples..."
                   rows={2}
                 />
+                <p className="text-xs text-muted-foreground">
+                  Share anything that helps us tailor content — learning style, areas of difficulty, or accommodations your child uses.
+                </p>
               </div>
 
               {error && <p className="text-sm text-destructive">{error}</p>}
