@@ -87,10 +87,16 @@ export async function createPortalSession() {
 
   const baseUrl = await getBaseUrl();
 
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer: profile.stripe_customer_id,
-    return_url: `${baseUrl}/billing`,
-  });
+  let portalSession;
+  try {
+    portalSession = await stripe.billingPortal.sessions.create({
+      customer: profile.stripe_customer_id,
+      return_url: `${baseUrl}/billing`,
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Failed to open billing portal";
+    return { error: msg };
+  }
 
   redirect(portalSession.url);
 }
