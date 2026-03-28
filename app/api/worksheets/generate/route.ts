@@ -11,6 +11,7 @@ const schema = z.object({
   difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]),
   numQuestions: z.union([z.literal(6), z.literal(8), z.literal(10)]),
   specialInstructions: z.string().optional(),
+  dyslexia_mode: z.boolean().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -108,7 +109,7 @@ export async function POST(request: NextRequest) {
         topic: parsed.data.topic,
         difficulty: parsed.data.difficulty,
         grade: child.grade,
-        worksheet_type: "practice",
+        worksheet_type: parsed.data.dyslexia_mode ? "dyslexia" : "practice",
         content: generated.content,
         answer_key: generated.answer_key,
       })

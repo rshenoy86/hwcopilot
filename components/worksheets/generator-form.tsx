@@ -33,6 +33,28 @@ const DIFFICULTY_OPTIONS = [
 
 const QUESTION_COUNTS = [6, 8, 10];
 
+const DYSLEXIA_INSTRUCTION = `DYSLEXIA-FRIENDLY FORMAT — follow every rule below without exception.
+
+SENTENCES: Maximum 7 words per sentence. One idea per sentence. Put each sentence on its own line with a blank line after it.
+
+WORDS: Use only simple, common words. For early grades: CVC words (cat, dog, red) and high-frequency sight words. Never use a complex word when a simple one works.
+
+BOLD KEY WORDS: Wrap the topic word and key vocabulary in ** so they render bold. Example: **addition** or **sentence**.
+
+QUESTION STEMS: Start every question with the key question word in ALL CAPS. Examples: "WHAT color is the ball?" / "WHERE does the dog go?" / "HOW MANY apples are left?" / "WHO helps Sam?"
+
+LEARN IT: Write exactly 2 short sentences. Each on its own line. Blank line between them.
+
+WORKED EXAMPLE: Number each step. One action per step. Format: "Step 1: [short action]". Each step on its own line.
+
+PROBLEMS: One short question per problem (max 10 words). End every problem with a blank line then exactly this text on its own line: "My answer: ___________"
+
+CHALLENGE: One sentence only. End with: "My answer: ___________"
+
+SPACING: Always put a blank line between every sentence and every section. Never write 2 sentences in a row without a blank line.
+
+TONE: Warm and encouraging. Use the child's name once. Say "You can do this!" somewhere. Keep it calm and simple.`;
+
 // Scaffolding options per subject category
 const SCAFFOLDING_OPTIONS: Record<string, { id: string; label: string; description: string; instruction: string }[]> = {
   ELA: [
@@ -40,7 +62,7 @@ const SCAFFOLDING_OPTIONS: Record<string, { id: string; label: string; descripti
       id: "dyslexia",
       label: "Dyslexia-friendly",
       description: "Shorter sentences, extra spacing, simpler layout",
-      instruction: "Format for dyslexia support: use very short sentences, simple common words, extra line spacing between items, and avoid dense text blocks.",
+      instruction: DYSLEXIA_INSTRUCTION,
     },
     {
       id: "word_bank",
@@ -66,7 +88,7 @@ const SCAFFOLDING_OPTIONS: Record<string, { id: string; label: string; descripti
       id: "dyslexia",
       label: "Dyslexia-friendly",
       description: "Shorter sentences, extra spacing, simpler layout",
-      instruction: "Format for dyslexia support: use very short sentences, simple common words, extra line spacing between items, and avoid dense text blocks.",
+      instruction: DYSLEXIA_INSTRUCTION,
     },
     {
       id: "word_bank",
@@ -92,7 +114,7 @@ const SCAFFOLDING_OPTIONS: Record<string, { id: string; label: string; descripti
       id: "dyslexia",
       label: "Dyslexia-friendly",
       description: "Shorter sentences, extra spacing, simpler layout",
-      instruction: "Format for dyslexia support: use very short sentences, simple common words, extra line spacing between items, and avoid dense text blocks.",
+      instruction: DYSLEXIA_INSTRUCTION,
     },
     {
       id: "word_bank",
@@ -196,7 +218,7 @@ const SCAFFOLDING_OPTIONS: Record<string, { id: string; label: string; descripti
       id: "dyslexia",
       label: "Dyslexia-friendly",
       description: "Shorter sentences, extra spacing",
-      instruction: "Format for dyslexia support: use very short sentences, simple common words, and extra line spacing.",
+      instruction: DYSLEXIA_INSTRUCTION,
     },
     {
       id: "sentence_starters",
@@ -297,6 +319,7 @@ export default function WorksheetGeneratorForm({
           difficulty: parseInt(difficulty) as 1 | 2 | 3,
           numQuestions,
           specialInstructions: combinedInstructions || undefined,
+          dyslexia_mode: activeScaffolding.includes("dyslexia"),
         }),
       });
 
