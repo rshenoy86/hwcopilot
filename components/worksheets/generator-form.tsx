@@ -293,11 +293,36 @@ export default function WorksheetGeneratorForm({
     );
   }
 
+  const INAPPROPRIATE_TERMS = [
+    "gun", "guns", "weapon", "weapons", "knife", "knives", "shoot", "shooting", "bomb", "violence",
+    "alcohol", "beer", "wine", "liquor", "drug", "drugs", "marijuana", "weed", "cocaine",
+    "sex", "sexual", "porn", "nude", "naked",
+    "kill", "killing", "murder", "death", "dead", "suicide",
+    "cigarette", "smoking", "tobacco", "vaping",
+    "gambling", "casino", "betting",
+    "hate", "racist", "racism",
+  ];
+
+  function containsInappropriateContent(text: string): boolean {
+    const lower = text.toLowerCase();
+    return INAPPROPRIATE_TERMS.some((term) => {
+      const regex = new RegExp(`\\b${term}\\b`);
+      return regex.test(lower);
+    });
+  }
+
   async function handleGenerate() {
     if (!selectedChildId || !subject || !topic) {
       setError("Please fill in all required fields");
       return;
     }
+
+    const textToCheck = [topic, specialInstructions].join(" ");
+    if (containsInappropriateContent(textToCheck)) {
+      setError("Please keep topics school-appropriate — no violence, alcohol, drugs, or other adult content. Try again with a different topic!");
+      return;
+    }
+
     setError(null);
     setLoading(true);
 
