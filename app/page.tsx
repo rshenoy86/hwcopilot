@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, BookOpen, Printer, Sparkles, ChevronRight } from "lucide-react";
+import Mascot from "@/components/mascot";
 
 const FAQ = [
   {
-    q: "What grades does HWCopilot support?",
+    q: "What grades does GuruBuddy support?",
     a: "Kindergarten through 8th grade. Every worksheet is tailored to the grade level, with age-appropriate language, problem complexity, and visual layout.",
   },
   {
@@ -36,8 +37,9 @@ export default function HomePage() {
       {/* Navigation */}
       <nav className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-40">
         <div className="container mx-auto max-w-6xl px-4 flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-            ✏️ HWCopilot
+          <Link href="/" className="flex items-center gap-1.5 font-bold text-xl text-primary">
+            <Mascot size={38} />
+            GuruBuddy
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/login">
@@ -53,6 +55,9 @@ export default function HomePage() {
       {/* Hero */}
       <section className="pt-20 pb-24 px-4 text-center">
         <div className="container mx-auto max-w-3xl">
+          <div className="flex justify-center mb-6">
+            <Mascot size={96} />
+          </div>
           <div className="inline-flex items-center gap-1.5 text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full mb-6">
             <Sparkles className="h-3.5 w-3.5" />
             AI-powered homework practice
@@ -331,8 +336,9 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-border py-10 px-4">
         <div className="container mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link href="/" className="font-bold text-primary">
-            ✏️ HWCopilot
+          <Link href="/" className="flex items-center gap-1.5 font-bold text-primary">
+            <Mascot size={28} />
+            GuruBuddy
           </Link>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <Link href="/login" className="hover:text-foreground">Sign in</Link>
@@ -340,7 +346,7 @@ export default function HomePage() {
             <Link href="#pricing" className="hover:text-foreground">Pricing</Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} HWCopilot. All rights reserved.
+            © {new Date().getFullYear()} GuruBuddy. All rights reserved.
           </p>
         </div>
       </footer>

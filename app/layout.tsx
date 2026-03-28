@@ -10,11 +10,11 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "Homework Copilot — Personalized Worksheets for K-8",
+  title: "GuruBuddy — Personalized Worksheets for K-8",
   description:
     "AI-powered homework worksheets personalized to your child's grade, interests, and curriculum. Ready to print in 30 seconds.",
   openGraph: {
-    title: "Homework Copilot",
+    title: "GuruBuddy",
     description: "Personalized K-8 homework worksheets, ready to print in 30 seconds.",
     type: "website",
   },

@@ -16,6 +16,7 @@ import {
 import { completeOnboarding } from "@/app/actions/profile";
 import { getSubjectsForGrade } from "@/lib/curriculum";
 import type { Grade } from "@/types";
+import Mascot from "@/components/mascot";
 
 const GRADES: { value: Grade; label: string }[] = [
   { value: "K", label: "Kindergarten" },
@@ -76,7 +77,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <span className="text-3xl font-bold text-primary">✏️ HWCopilot</span>
+          <span className="inline-flex items-center gap-2 text-3xl font-bold text-primary"><Mascot size={52} />GuruBuddy</span>
           <div className="mt-4 flex justify-center gap-2">
             {[1, 2, 3].map((s) => (
               <div

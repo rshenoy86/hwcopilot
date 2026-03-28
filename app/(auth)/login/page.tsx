@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "@/app/actions/auth";
+import Mascot from "@/components/mascot";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -27,8 +28,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
-            ✏️ HWCopilot
+          <Link href="/" className="inline-flex items-center gap-1.5 text-2xl font-bold text-primary">
+            <Mascot size={44} />
+            GuruBuddy
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-foreground">Welcome back</h1>
           <p className="mt-2 text-muted-foreground">Sign in to your account</p>

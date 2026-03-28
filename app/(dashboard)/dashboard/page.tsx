@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { BookOpen, Plus, MessageCircle, ArrowRight, Zap } from "lucide-react";
 import { formatDate, getResetDate } from "@/lib/utils";
 import type { Child, Worksheet } from "@/types";
+import Mascot from "@/components/mascot";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -52,13 +53,16 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Welcome header */}
-      <div>
-        <h1 className="text-2xl font-bold">
-          Welcome back, {profile.first_name}! 👋
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Ready to create some great worksheets?
-        </p>
+      <div className="flex items-center gap-4">
+        <Mascot size={56} />
+        <div>
+          <h1 className="text-2xl font-bold">
+            Welcome back, {profile.first_name}!
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Ready to create some great worksheets?
+          </p>
+        </div>
       </div>
 
       {/* Usage bar — most important element */}

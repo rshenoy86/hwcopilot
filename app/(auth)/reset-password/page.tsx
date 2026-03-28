@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resetPassword } from "@/app/actions/auth";
+import Mascot from "@/components/mascot";
 
 export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +30,8 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
-            ✏️ HWCopilot
+            <Mascot size={44} />
+            GuruBuddy
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-foreground">Reset your password</h1>
           <p className="mt-2 text-muted-foreground">

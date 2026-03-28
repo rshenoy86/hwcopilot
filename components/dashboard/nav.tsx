@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { signOut } from "@/app/actions/auth";
 import { cn } from "@/lib/utils";
 import type { Profile } from "@/types";
+import Mascot from "@/components/mascot";
 
 interface DashboardNavProps {
   profile: Profile;
@@ -32,8 +33,9 @@ export default function DashboardNav({ profile, userEmail }: DashboardNavProps) 
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary">
-            ✏️ HWCopilot
+          <Link href="/dashboard" className="flex items-center gap-1.5 font-bold text-lg text-primary">
+            <Mascot size={36} />
+            GuruBuddy
           </Link>
 
           {/* Desktop nav */}
