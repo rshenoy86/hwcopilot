@@ -294,13 +294,19 @@ export default function WorksheetGeneratorForm({
   }
 
   const INAPPROPRIATE_TERMS = [
+    // Weapons & violence
     "gun", "guns", "weapon", "weapons", "knife", "knives", "shoot", "shooting", "bomb", "violence",
-    "alcohol", "beer", "wine", "liquor", "drug", "drugs", "marijuana", "weed", "cocaine",
-    "sex", "sexual", "porn", "nude", "naked",
-    "kill", "killing", "murder", "death", "dead", "suicide",
-    "cigarette", "smoking", "tobacco", "vaping",
-    "gambling", "casino", "betting",
-    "hate", "racist", "racism",
+    "kill", "killing", "murder", "death", "dead", "suicide", "stab", "stabbing", "fight", "attack",
+    // Alcohol & substances
+    "alcohol", "beer", "wine", "liquor", "drunk", "drug", "drugs", "marijuana", "weed", "cocaine",
+    "meth", "heroin", "overdose", "cigarette", "smoking", "tobacco", "vaping",
+    // Sexual content
+    "sex", "sexual", "porn", "nude", "naked", "explicit",
+    // Profanity (common variations)
+    "fuck", "shit", "ass", "bitch", "damn", "crap", "bastard", "dick", "cock", "pussy",
+    "asshole", "bullshit", "motherfucker", "cunt",
+    // Other
+    "gambling", "casino", "betting", "hate", "racist", "racism",
   ];
 
   function containsInappropriateContent(text: string): boolean {
