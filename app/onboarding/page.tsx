@@ -17,6 +17,7 @@ import { completeOnboarding } from "@/app/actions/profile";
 import { getSubjectsForGrade } from "@/lib/curriculum";
 import type { Grade } from "@/types";
 import Mascot from "@/components/mascot";
+import Footer from "@/components/footer";
 
 const GRADES: { value: Grade; label: string }[] = [
   { value: "K", label: "Kindergarten" },
@@ -73,7 +74,8 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-background flex flex-col px-4 py-12">
+      <div className="flex-1 flex flex-col items-center justify-center">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -283,6 +285,8 @@ export default function OnboardingPage() {
           )}
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }

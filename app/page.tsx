@@ -344,6 +344,8 @@ export default function HomePage() {
             <Link href="/login" className="hover:text-foreground">Sign in</Link>
             <Link href="/signup" className="hover:text-foreground">Sign up</Link>
             <Link href="#pricing" className="hover:text-foreground">Pricing</Link>
+            <Link href="/terms" className="hover:text-foreground">Terms</Link>
+            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
           </div>
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} GuruBuddy. All rights reserved.

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "@/app/actions/auth";
 import Mascot from "@/components/mascot";
+import Footer from "@/components/footer";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +26,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex flex-col bg-background px-4">
+      <div className="flex-1 flex flex-col items-center justify-center">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-1.5 text-2xl font-bold text-primary">
@@ -97,6 +99,8 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }

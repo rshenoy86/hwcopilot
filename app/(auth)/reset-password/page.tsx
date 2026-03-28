@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resetPassword } from "@/app/actions/auth";
 import Mascot from "@/components/mascot";
+import Footer from "@/components/footer";
 
 export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +27,8 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex flex-col bg-background px-4">
+      <div className="flex-1 flex flex-col items-center justify-center">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
@@ -87,6 +89,8 @@ export default function ResetPasswordPage() {
           </Link>
         </p>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }
