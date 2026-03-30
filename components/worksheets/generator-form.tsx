@@ -33,6 +33,19 @@ const DIFFICULTY_OPTIONS = [
 
 const QUESTION_COUNTS = [6, 8, 10];
 
+const THEMES = [
+  { emoji: "⚽", label: "Soccer" },
+  { emoji: "🦕", label: "Dinosaurs" },
+  { emoji: "🚀", label: "Space" },
+  { emoji: "🐶", label: "Pets" },
+  { emoji: "🧁", label: "Baking" },
+  { emoji: "🏄", label: "Beach" },
+  { emoji: "🦸", label: "Superheroes" },
+  { emoji: "🐠", label: "Ocean" },
+  { emoji: "🎮", label: "Gaming" },
+  { emoji: "🦋", label: "Nature" },
+];
+
 const DYSLEXIA_INSTRUCTION = `DYSLEXIA-FRIENDLY FORMAT — follow every rule below without exception.
 
 SENTENCES: Maximum 7 words per sentence. One idea per sentence. Put each sentence on its own line with a blank line after it.
@@ -268,6 +281,7 @@ export default function WorksheetGeneratorForm({
   const [numQuestions, setNumQuestions] = useState<6 | 8 | 10>(8);
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [activeScaffolding, setActiveScaffolding] = useState<string[]>([]);
+  const [theme, setTheme] = useState<string | null>(null);
 
   const selectedChild = children.find((c) => c.id === selectedChildId);
   const availableSubjects = selectedChild ? getSubjectsForGrade(selectedChild.grade) : [];
@@ -350,6 +364,7 @@ export default function WorksheetGeneratorForm({
           difficulty: parseInt(difficulty) as 1 | 2 | 3,
           numQuestions,
           specialInstructions: combinedInstructions || undefined,
+          theme: theme ? `${theme}` : undefined,
           dyslexia_mode: activeScaffolding.includes("dyslexia"),
         }),
       });
@@ -500,6 +515,34 @@ export default function WorksheetGeneratorForm({
                 {n}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Theme picker */}
+        <div className="space-y-2">
+          <Label>
+            Worksheet theme{" "}
+            <span className="text-muted-foreground font-normal">(optional — makes every problem about one topic)</span>
+          </Label>
+          <div className="grid grid-cols-5 gap-2">
+            {THEMES.map((t) => {
+              const selected = theme === t.label;
+              return (
+                <button
+                  key={t.label}
+                  type="button"
+                  onClick={() => setTheme(selected ? null : t.label)}
+                  className={`flex flex-col items-center gap-1 py-2 rounded-lg border text-xs font-medium transition-all active:scale-95 ${
+                    selected
+                      ? "border-primary bg-accent ring-1 ring-primary"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  <span className="text-xl">{t.emoji}</span>
+                  <span>{t.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 

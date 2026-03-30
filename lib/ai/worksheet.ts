@@ -15,6 +15,7 @@ export interface WorksheetGenerationParams {
   difficulty: 1 | 2 | 3;
   numQuestions: 6 | 8 | 10;
   interests: string;
+  theme?: string;
   specialInstructions?: string;
 }
 
@@ -68,6 +69,7 @@ Difficulty: ${difficultyLabel}
 Number of problems: ${params.numQuestions}
 Child's name: ${params.childName}
 Child's interests: ${params.interests}
+${params.theme ? `Theme: Use "${params.theme}" as the consistent theme throughout the entire worksheet. Every word problem, example, and scenario should feature characters, objects, or situations related to ${params.theme}. Keep the theme present in all sections (Learn It, Worked Example, problems, and Challenge).` : ""}
 ${params.specialInstructions ? `Special instructions: ${params.specialInstructions}` : ""}
 
 Requirements:

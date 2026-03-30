@@ -11,6 +11,7 @@ const schema = z.object({
   difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]),
   numQuestions: z.union([z.literal(6), z.literal(8), z.literal(10)]),
   specialInstructions: z.string().optional(),
+  theme: z.string().max(50).optional(),
   dyslexia_mode: z.boolean().optional(),
 });
 
@@ -94,6 +95,7 @@ export async function POST(request: NextRequest) {
         difficulty: parsed.data.difficulty,
         numQuestions: parsed.data.numQuestions,
         interests: child.interests,
+        theme: parsed.data.theme,
         specialInstructions: parsed.data.specialInstructions,
       },
       user.id
