@@ -66,6 +66,11 @@ export interface HomeworkHelpSession {
   created_at: string;
 }
 
+export interface TestVisual {
+  type: "clock" | "number_line" | "fraction_model" | "shape" | "dot_array";
+  data: Record<string, unknown>;
+}
+
 export interface TestQuestion {
   number: number;
   section: "A" | "B" | "C";
@@ -76,6 +81,7 @@ export interface TestQuestion {
   solution_steps?: string[];
   topic_tag: string;
   points: number;
+  visual?: TestVisual;
 }
 
 export interface QuestionResult {

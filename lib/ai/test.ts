@@ -64,6 +64,26 @@ Always respond with valid JSON matching this exact structure:
   "total_points": 30
 }
 
+VISUAL AIDS — include a "visual" field on a question when the topic genuinely requires a diagram to answer. Never say "shown below" or "in the figure" in the question text unless you include a visual. Supported visual types:
+
+- Clock: { "type": "clock", "data": { "hours": 3, "minutes": 30 } }
+  Use for: telling time questions. Question text: "What time does the clock show?"
+
+- Number line: { "type": "number_line", "data": { "min": 0, "max": 20, "marked": [13] } }
+  Use for: number line problems, rounding, skip counting. Question text: "What number is marked on the number line?"
+
+- Fraction model: { "type": "fraction_model", "data": { "total_parts": 4, "shaded_parts": 3, "shape": "circle" } }
+  shape can be "circle" or "rectangle". Use for: identifying fractions from diagrams.
+
+- Shape: { "type": "shape", "data": { "shape": "rectangle", "width_label": "8 cm", "height_label": "5 cm" } }
+  shape can be "rectangle", "square", "triangle", "circle". For circle use "radius_label". For triangle use "side_label".
+  Use for: area, perimeter, geometry questions that reference a labeled diagram.
+
+- Dot array: { "type": "dot_array", "data": { "rows": 3, "cols": 4 } }
+  Use for: multiplication/arrays questions. Maximum 6 rows and 8 cols.
+
+Only include a visual when it meaningfully helps answer the question. Most questions should have no visual.
+
 Do not include any text outside the JSON. Do not include markdown code fences.`;
 }
 

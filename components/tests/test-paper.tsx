@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import type { Test, Child, TestQuestion } from "@/types";
+import { TestVisualRenderer } from "@/components/tests/visuals";
 
 interface TestPaperProps {
   test: Test;
@@ -126,6 +127,12 @@ function QuestionBlock({ question, showAnswer }: { question: TestQuestion; showA
         {question.number}. {question.question}
         <span className="text-muted-foreground font-normal ml-1">({question.points} pts)</span>
       </p>
+
+      {question.visual && (
+        <div className="ml-4 mb-2">
+          <TestVisualRenderer visual={question.visual} />
+        </div>
+      )}
 
       {question.type === "multiple_choice" && question.options && (
         <div className="grid grid-cols-2 gap-1 ml-4 text-sm">
