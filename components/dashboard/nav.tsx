@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Home, Users, MessageCircle, CreditCard, LogOut, Menu, X } from "lucide-react";
+import { BookOpen, Home, Users, MessageCircle, CreditCard, LogOut, Menu, X, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,7 @@ interface DashboardNavProps {
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/worksheets/new", label: "New Worksheet", icon: BookOpen },
+  { href: "/test-prep", label: "Test Prep", icon: ClipboardList },
   { href: "/children", label: "My Children", icon: Users },
   { href: "/homework-help", label: "Homework Help", icon: MessageCircle },
   { href: "/billing", label: "Plan & Billing", icon: CreditCard },

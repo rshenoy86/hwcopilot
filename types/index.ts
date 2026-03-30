@@ -11,6 +11,7 @@ export interface Profile {
   stripe_subscription_id: string | null;
   worksheets_generated_this_month: number;
   worksheet_monthly_limit: number;
+  test_prep_used_this_month: number;
   month_reset_date: string;
   created_at: string;
   updated_at: string;
@@ -62,6 +63,71 @@ export interface HomeworkHelpSession {
   child_id: string | null;
   question: string;
   response: string;
+  created_at: string;
+}
+
+export interface TestQuestion {
+  number: number;
+  section: "A" | "B" | "C";
+  type: "multiple_choice" | "short_answer" | "show_work";
+  question: string;
+  options?: string[];
+  correct_answer: string;
+  solution_steps?: string[];
+  topic_tag: string;
+  points: number;
+}
+
+export interface QuestionResult {
+  number: number;
+  correct: boolean;
+  student_answer: string;
+  points_earned: number;
+  points_possible: number;
+  feedback: string;
+}
+
+export interface TestFeedback {
+  overall_summary: string;
+  score: number;
+  total_points: number;
+  percentage: number;
+  question_results: QuestionResult[];
+  weak_areas: string[];
+  strong_areas: string[];
+  encouragement: string;
+}
+
+export interface PracticeExercise {
+  number: number;
+  topic: string;
+  problem: string;
+  hint: string;
+  answer: string;
+  explanation: string;
+}
+
+export interface Test {
+  id: string;
+  user_id: string;
+  child_id: string;
+  subject: string;
+  topic: string;
+  grade: Grade;
+  title: string;
+  questions: TestQuestion[];
+  total_points: number;
+  status: "generated" | "graded";
+  created_at: string;
+}
+
+export interface TestSubmission {
+  id: string;
+  test_id: string;
+  user_id: string;
+  image_paths: string[];
+  feedback: TestFeedback;
+  practice_exercises: PracticeExercise[];
   created_at: string;
 }
 
