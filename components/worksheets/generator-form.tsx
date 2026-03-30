@@ -33,7 +33,7 @@ const DIFFICULTY_OPTIONS = [
 
 const QUESTION_COUNTS = [6, 8, 10];
 
-const THEMES = [
+const GENERIC_THEMES = [
   { emoji: "⚽", label: "Soccer" },
   { emoji: "🦕", label: "Dinosaurs" },
   { emoji: "🚀", label: "Space" },
@@ -45,6 +45,44 @@ const THEMES = [
   { emoji: "🎮", label: "Gaming" },
   { emoji: "🦋", label: "Nature" },
 ];
+
+// Skip words that are personal/relational, not themeable topics
+const SKIP_WORDS = new Set([
+  "and", "or", "the", "his", "her", "their", "he", "she", "they",
+  "mom", "dad", "grandparents", "grandma", "grandpa", "likes", "love",
+  "loves", "all", "also", "including", "such", "as", "a", "an", "with",
+  "we", "refer", "to", "is", "are", "has", "have",
+]);
+
+function parseInterestThemes(interests: string): string[] {
+  if (!interests) return [];
+  // Split on commas, periods, exclamation marks, "and"
+  const tokens = interests
+    .split(/[,\.!]+|\band\b/i)
+    .map((t) => t.replace(/\b(He|She|They|His|Her|Their)\b.*$/i, "").trim())
+    .map((t) => t.replace(/^(a|an|the)\s+/i, "").trim())
+    .filter((t) => {
+      if (!t || t.length < 3 || t.length > 25) return false;
+      const words = t.toLowerCase().split(/\s+/);
+      if (words.length > 3) return false;
+      if (words.some((w) => SKIP_WORDS.has(w))) return false;
+      return true;
+    })
+    .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
+
+  // Deduplicate (case-insensitive) and cap at 5
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const t of tokens) {
+    const key = t.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      result.push(t);
+    }
+    if (result.length === 5) break;
+  }
+  return result;
+}
 
 const DYSLEXIA_INSTRUCTION = `DYSLEXIA-FRIENDLY FORMAT — follow every rule below without exception.
 
@@ -282,11 +320,17 @@ export default function WorksheetGeneratorForm({
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [activeScaffolding, setActiveScaffolding] = useState<string[]>([]);
   const [theme, setTheme] = useState<string | null>(null);
+  const [customTheme, setCustomTheme] = useState("");
 
   const selectedChild = children.find((c) => c.id === selectedChildId);
   const availableSubjects = selectedChild ? getSubjectsForGrade(selectedChild.grade) : [];
   const availableTopics = selectedChild && subject ? getTopicsForSubjectAndGrade(selectedChild.grade, subject) : [];
   const scaffoldingOptions = subject ? getScaffoldingForSubject(subject) : [];
+  const personalThemes = selectedChild ? parseInterestThemes(selectedChild.interests) : [];
+  // Generic tiles that aren't already in personal themes
+  const genericThemesFiltered = GENERIC_THEMES.filter(
+    (t) => !personalThemes.some((p) => p.toLowerCase() === t.label.toLowerCase())
+  );
 
   function handleChildChange(childId: string) {
     setSelectedChildId(childId);
@@ -364,7 +408,7 @@ export default function WorksheetGeneratorForm({
           difficulty: parseInt(difficulty) as 1 | 2 | 3,
           numQuestions,
           specialInstructions: combinedInstructions || undefined,
-          theme: theme ? `${theme}` : undefined,
+          theme: theme ?? (customTheme.trim() || undefined),
           dyslexia_mode: activeScaffolding.includes("dyslexia"),
         }),
       });
@@ -519,19 +563,49 @@ export default function WorksheetGeneratorForm({
         </div>
 
         {/* Theme picker */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <Label>
             Worksheet theme{" "}
             <span className="text-muted-foreground font-normal">(optional — makes every problem about one topic)</span>
           </Label>
+
+          {/* Personal themes from child's interests */}
+          {personalThemes.length > 0 && (
+            <div className="space-y-1.5">
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                {selectedChild?.name}&apos;s interests
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {personalThemes.map((label) => {
+                  const selected = theme === label;
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => { setTheme(selected ? null : label); setCustomTheme(""); }}
+                      className={`px-3 py-1.5 rounded-full border text-sm font-medium transition-all active:scale-95 ${
+                        selected
+                          ? "border-primary bg-accent ring-1 ring-primary"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Generic theme tiles */}
           <div className="grid grid-cols-5 gap-2">
-            {THEMES.map((t) => {
+            {genericThemesFiltered.map((t) => {
               const selected = theme === t.label;
               return (
                 <button
                   key={t.label}
                   type="button"
-                  onClick={() => setTheme(selected ? null : t.label)}
+                  onClick={() => { setTheme(selected ? null : t.label); setCustomTheme(""); }}
                   className={`flex flex-col items-center gap-1 py-2 rounded-lg border text-xs font-medium transition-all active:scale-95 ${
                     selected
                       ? "border-primary bg-accent ring-1 ring-primary"
@@ -543,6 +617,19 @@ export default function WorksheetGeneratorForm({
                 </button>
               );
             })}
+          </div>
+
+          {/* Custom theme input */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground whitespace-nowrap">or type your own:</span>
+            <input
+              type="text"
+              value={customTheme}
+              onChange={(e) => { setCustomTheme(e.target.value); setTheme(null); }}
+              placeholder="e.g. Minecraft, ballet, cooking..."
+              maxLength={50}
+              className="flex-1 h-8 rounded-md border border-input bg-background px-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
           </div>
         </div>
 
