@@ -1,7 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import TestPaper from "@/components/tests/test-paper";
-import TestUploadForm from "@/components/tests/test-upload-form";
+import TestModeSelector from "@/components/tests/test-mode-selector";
 import type { Test, Child } from "@/types";
 
 interface PageProps {
@@ -24,15 +23,13 @@ export default async function TestPage({ params }: PageProps) {
 
   if (!test) notFound();
 
-  // If already graded, go straight to results
   if (test.status === "graded") redirect(`/test-prep/${id}/results`);
 
   const child = test.children as Child;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
-      <TestPaper test={test as Test} child={child} />
-      <TestUploadForm testId={id} />
+    <div className="max-w-3xl mx-auto">
+      <TestModeSelector test={test as Test} child={child} />
     </div>
   );
 }
