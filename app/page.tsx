@@ -7,15 +7,15 @@ import Mascot from "@/components/mascot";
 const FAQ = [
   {
     q: "What grades does GuruBuddy support?",
-    a: "Kindergarten through 8th grade. Everything is tailored to your child's exact grade level — age-appropriate language, the right complexity, and curriculum that matches what they're actually learning in class.",
+    a: "Kindergarten through 8th grade. Everything is tailored to your child's exact grade level: age-appropriate language, the right complexity, and content that matches what they're actually learning in class.",
   },
   {
     q: "How is the content personalized?",
-    a: "When you create a child profile, you tell us their grade, subjects, and interests — soccer, Minecraft, dinosaurs, whatever they're into. GuruBuddy weaves those interests into every worksheet and test, so the content actually feels relevant to your kid.",
+    a: "When you create a child profile, you tell us their grade, subjects, and interests. Soccer, Minecraft, dinosaurs, whatever they're into. GuruBuddy weaves those interests into every worksheet and test, so the content actually feels relevant to your kid.",
   },
   {
     q: "How does test prep work?",
-    a: "Pick a subject and topic, and GuruBuddy generates a full practice test in about 30 seconds — multiple choice, short answer, and show-your-work questions, just like a real classroom test. Your child can take it online right in the browser, or you can print it. Either way, GuruBuddy grades it instantly, shows exactly where the gaps are, and generates targeted practice exercises to fix them.",
+    a: "Pick a subject and topic, and GuruBuddy generates a full practice test in about 30 seconds. Multiple choice, short answer, and show-your-work questions, just like a real classroom test. Your child can take it online right in the browser, or you can print it. Either way, GuruBuddy grades it instantly, shows exactly where they struggled, and creates extra practice to help them get it.",
   },
   {
     q: "What curriculum does GuruBuddy follow?",
@@ -23,7 +23,7 @@ const FAQ = [
   },
   {
     q: "What's the difference between Free and Pro?",
-    a: "Free gives you 10 worksheets and 1 test prep per month with 1 child profile — enough to try everything. Pro ($12/month) gives you 250 worksheets, 10 test preps, unlimited child profiles, and AI Homework Help. Most families use a fraction of the Pro limits.",
+    a: "Free gives you 10 worksheets and 1 test prep per month with 1 child profile. Enough to try everything and see how it works. Pro ($12/month) gives you 250 worksheets, 10 test preps, unlimited child profiles, and AI Homework Help. Most families use a fraction of those limits.",
   },
   {
     q: "Can I cancel anytime?",
@@ -63,11 +63,11 @@ export default function HomePage() {
             AI-powered learning support for K–8
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-            Be the parent your kids need —{" "}
-            <span className="text-primary">even on your busiest days</span>
+            Helping your child learn{" "}
+            <span className="text-primary">shouldn&apos;t require a free afternoon</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            GuruBuddy gives you everything you need to support your child&apos;s learning in under a minute. Custom practice, AI-graded test prep, and homework help — personalized to exactly what they&apos;re studying right now.
+            GuruBuddy gives you everything you need to support your child&apos;s learning in under a minute. Custom practice, AI-graded test prep, and homework help. Personalized to exactly what they&apos;re studying right now.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/signup">
@@ -84,25 +84,28 @@ export default function HomePage() {
       </section>
 
       {/* Pain band */}
-      <section className="py-12 px-4 bg-slate-50 border-y border-slate-100">
+      <section className="py-16 px-4 bg-slate-50 border-y border-slate-100">
         <div className="container mx-auto max-w-4xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
             {[
               {
-                quote: "\"They have a test Monday. You found out Sunday night.\"",
+                quote: "They have a test Monday. You found out Sunday night.",
                 resolution: "Generate a full practice test in 30 seconds.",
               },
               {
-                quote: "\"You want to help with homework but you don't remember 4th grade fractions.\"",
+                quote: "You want to help with homework but you don't remember 4th grade fractions.",
                 resolution: "GuruBuddy explains it step by step.",
               },
               {
-                quote: "\"Between work, dinner, and activities — extra practice just doesn't happen.\"",
+                quote: "Between work, dinner, and activities, extra practice just doesn't happen.",
                 resolution: "It takes one minute. That's all.",
               },
             ].map((item, i) => (
-              <div key={i} className="space-y-2">
-                <p className="text-sm text-muted-foreground italic leading-relaxed">{item.quote}</p>
+              <div key={i} className="space-y-3">
+                <div className="relative">
+                  <span className="text-6xl font-serif text-primary/20 leading-none select-none absolute -top-2 left-1/2 -translate-x-1/2">&ldquo;</span>
+                  <p className="text-xl font-semibold text-foreground leading-snug pt-6 italic">{item.quote}</p>
+                </div>
                 <p className="text-sm font-semibold text-primary">{item.resolution}</p>
               </div>
             ))}
@@ -116,7 +119,7 @@ export default function HomePage() {
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold">Three ways GuruBuddy has your back</h2>
             <p className="text-muted-foreground mt-3 text-lg max-w-xl mx-auto">
-              Whether it&apos;s daily practice, test prep, or a homework question at 9pm — GuruBuddy is ready.
+              Whether it&apos;s daily practice, test prep, or a homework question at 9pm, GuruBuddy is ready.
             </p>
           </div>
 
@@ -127,7 +130,7 @@ export default function HomePage() {
                 gradient: "from-blue-500 to-indigo-600",
                 shadow: "shadow-blue-100",
                 title: "Practice Worksheets",
-                description: "Custom, curriculum-aligned worksheets built around your child's exact grade, current topic, and interests. Ready to print or practice digitally in 30 seconds.",
+                description: "Custom worksheets built around your child's exact grade, current topic, and interests. Ready to print or practice online in 30 seconds.",
                 bullets: ["K–8 all subjects", "Personalized to their interests", "Answer key included"],
               },
               {
@@ -135,8 +138,8 @@ export default function HomePage() {
                 gradient: "from-violet-500 to-purple-600",
                 shadow: "shadow-violet-100",
                 title: "Test Prep",
-                description: "Generate a real practice test with multiple choice, short answer, and show-your-work questions. Take it online or print it. Get AI feedback and targeted practice for every gap.",
-                bullets: ["Online or print mode", "Instant AI grading", "Targeted follow-up practice"],
+                description: "Generate a real practice test with multiple choice, short answer, and show-your-work questions. Take it online or print it. Get instant feedback and extra practice on anything they missed.",
+                bullets: ["Online or print mode", "Instant AI grading", "Follow-up practice included"],
               },
               {
                 icon: MessageCircle,
@@ -198,7 +201,7 @@ export default function HomePage() {
                 shadow: "shadow-violet-200",
                 Icon: Sparkles,
                 title: "Get what you need",
-                description: "Choose a worksheet, practice test, or homework question. GuruBuddy generates it instantly — personalized, curriculum-aligned, ready to go.",
+                description: "Choose a worksheet, practice test, or homework question. GuruBuddy generates it instantly. Personalized, ready to use, and actually relevant to what they're learning.",
                 tags: ["Worksheets", "Tests", "Help"],
               },
               {
@@ -207,8 +210,8 @@ export default function HomePage() {
                 shadow: "shadow-emerald-200",
                 Icon: Monitor,
                 title: "See where they stand",
-                description: "Graded results show exactly what your child knows and what needs more work — so the next session is always targeted.",
-                tags: ["Instant feedback", "Gap analysis"],
+                description: "Graded results show exactly what your child knows and what needs more work. So you always know what to focus on next.",
+                tags: ["Instant feedback", "Know what to work on"],
               },
             ].map((item) => (
               <div key={item.step} className="flex flex-col items-center text-center">
@@ -259,12 +262,12 @@ export default function HomePage() {
               {
                 icon: "📋",
                 title: "Real test prep",
-                description: "Not just flashcards. Full practice tests with multiple choice, short answer, and show-your-work — graded by AI with targeted follow-up for every gap.",
+                description: "Not just flashcards. Full practice tests with multiple choice, short answer, and show-your-work. Graded by AI with extra practice on anything they missed.",
               },
               {
                 icon: "📚",
-                title: "Curriculum-aligned",
-                description: "Every worksheet and test matches US Common Core standards. What GuruBuddy generates is exactly what your child is supposed to be learning.",
+                title: "Matches what they're learning",
+                description: "Every worksheet and test is built around US Common Core standards for K-8. What GuruBuddy generates is exactly what your child is supposed to be learning right now.",
               },
               {
                 icon: "💬",
@@ -274,7 +277,7 @@ export default function HomePage() {
               {
                 icon: "🖨️",
                 title: "Print or go digital",
-                description: "Worksheets and tests print beautifully in black and white. Or skip the printer — everything works online too.",
+                description: "Worksheets and tests print beautifully in black and white. Or skip the printer and do everything online.",
               },
             ].map((f) => (
               <Card key={f.title} className="hover:shadow-md transition-shadow">
@@ -361,7 +364,7 @@ export default function HomePage() {
                   ))}
                 </ul>
                 <Link href="/signup">
-                  <Button className="w-full">Get started — it&apos;s free</Button>
+                  <Button className="w-full">Get started free</Button>
                 </Link>
               </CardContent>
             </Card>
@@ -396,7 +399,7 @@ export default function HomePage() {
         <div className="container mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold">Your kid&apos;s next test is coming. Be ready.</h2>
           <p className="mt-3 text-primary-foreground/80 text-lg">
-            GuruBuddy takes the stress out of homework time — for you and for them.
+            GuruBuddy takes the stress out of homework time. For you and for them.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/signup">
