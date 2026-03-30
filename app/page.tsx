@@ -19,7 +19,7 @@ const FAQ = [
   },
   {
     q: "What curriculum does GuruBuddy follow?",
-    a: "All content aligns to US Common Core standards for K–8. Subjects include Math, ELA/Reading/Writing, Science, and Social Studies.",
+    a: "All content is aligned to the Texas Essential Knowledge and Skills (TEKS) for K–8. Subjects include Math, ELA/Reading/Writing, Science, and Social Studies.",
   },
   {
     q: "What's the difference between Free and Pro?",
@@ -67,7 +67,7 @@ export default function HomePage() {
             <span className="text-primary">shouldn&apos;t require a free afternoon</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            GuruBuddy gives you everything you need to support your child&apos;s learning in under a minute. Custom practice, AI-graded test prep, and homework help. Personalized to exactly what they&apos;re studying right now.
+            Custom practice worksheets, AI-graded test prep, and homework help. All built around the Texas curriculum, and personalized to exactly what your child is studying right now.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/signup">
@@ -267,7 +267,7 @@ export default function HomePage() {
               {
                 icon: "📚",
                 title: "Matches what they're learning",
-                description: "Every worksheet and test is built around US Common Core standards for K-8. What GuruBuddy generates is exactly what your child is supposed to be learning right now.",
+                description: "Every worksheet and test is built around the Texas curriculum (TEKS) for K-8. What GuruBuddy generates is exactly what your child is supposed to be learning right now.",
               },
               {
                 icon: "💬",
