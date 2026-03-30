@@ -33,18 +33,51 @@ const DIFFICULTY_OPTIONS = [
 
 const QUESTION_COUNTS = [6, 8, 10];
 
-const GENERIC_THEMES = [
-  { emoji: "⚽", label: "Soccer" },
-  { emoji: "🦕", label: "Dinosaurs" },
-  { emoji: "🚀", label: "Space" },
-  { emoji: "🐶", label: "Pets" },
-  { emoji: "🧁", label: "Baking" },
-  { emoji: "🏄", label: "Beach" },
-  { emoji: "🦸", label: "Superheroes" },
-  { emoji: "🐠", label: "Ocean" },
-  { emoji: "🎮", label: "Gaming" },
-  { emoji: "🦋", label: "Nature" },
-];
+const THEMES_BY_GRADE_BAND: Record<string, { emoji: string; label: string }[]> = {
+  "K-2": [
+    { emoji: "🦕", label: "Dinosaurs" },
+    { emoji: "🚀", label: "Space" },
+    { emoji: "🐶", label: "Pets" },
+    { emoji: "🦸", label: "Superheroes" },
+    { emoji: "🐠", label: "Ocean" },
+    { emoji: "🧁", label: "Baking" },
+    { emoji: "🌈", label: "Rainbows" },
+    { emoji: "🚂", label: "Trains" },
+    { emoji: "🦋", label: "Nature" },
+    { emoji: "🐸", label: "Frogs" },
+  ],
+  "3-5": [
+    { emoji: "🚀", label: "Space" },
+    { emoji: "🎮", label: "Gaming" },
+    { emoji: "🦸", label: "Superheroes" },
+    { emoji: "🐠", label: "Ocean" },
+    { emoji: "🧁", label: "Baking" },
+    { emoji: "🏄", label: "Beach" },
+    { emoji: "🦋", label: "Nature" },
+    { emoji: "🏕️", label: "Camping" },
+    { emoji: "🐶", label: "Pets" },
+    { emoji: "🎨", label: "Art" },
+  ],
+  "6-8": [
+    { emoji: "🎮", label: "Gaming" },
+    { emoji: "🚀", label: "Space" },
+    { emoji: "🏄", label: "Beach" },
+    { emoji: "🎵", label: "Music" },
+    { emoji: "🐠", label: "Ocean" },
+    { emoji: "🦋", label: "Nature" },
+    { emoji: "🍕", label: "Food" },
+    { emoji: "🏕️", label: "Camping" },
+    { emoji: "🎨", label: "Art" },
+    { emoji: "✈️", label: "Travel" },
+  ],
+};
+
+function getThemesForGrade(grade: string): { emoji: string; label: string }[] {
+  const n = grade === "K" ? 0 : parseInt(grade);
+  if (n <= 2) return THEMES_BY_GRADE_BAND["K-2"];
+  if (n <= 5) return THEMES_BY_GRADE_BAND["3-5"];
+  return THEMES_BY_GRADE_BAND["6-8"];
+}
 
 // Skip words that are personal/relational, not themeable topics
 const SKIP_WORDS = new Set([
@@ -327,8 +360,9 @@ export default function WorksheetGeneratorForm({
   const availableTopics = selectedChild && subject ? getTopicsForSubjectAndGrade(selectedChild.grade, subject) : [];
   const scaffoldingOptions = subject ? getScaffoldingForSubject(subject) : [];
   const personalThemes = selectedChild ? parseInterestThemes(selectedChild.interests) : [];
-  // Generic tiles that aren't already in personal themes
-  const genericThemesFiltered = GENERIC_THEMES.filter(
+  const gradeThemes = selectedChild ? getThemesForGrade(selectedChild.grade) : THEMES_BY_GRADE_BAND["3-5"];
+  // Grade-appropriate tiles that aren't already covered by personal themes
+  const genericThemesFiltered = gradeThemes.filter(
     (t) => !personalThemes.some((p) => p.toLowerCase() === t.label.toLowerCase())
   );
 
@@ -598,6 +632,10 @@ export default function WorksheetGeneratorForm({
           )}
 
           {/* Generic theme tiles */}
+          <div className="space-y-1.5">
+          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+            Other fun topics
+          </p>
           <div className="grid grid-cols-5 gap-2">
             {genericThemesFiltered.map((t) => {
               const selected = theme === t.label;
@@ -617,6 +655,7 @@ export default function WorksheetGeneratorForm({
                 </button>
               );
             })}
+          </div>
           </div>
 
           {/* Custom theme input */}
