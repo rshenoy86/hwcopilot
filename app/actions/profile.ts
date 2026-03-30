@@ -39,7 +39,7 @@ export async function completeOnboarding(data: {
     first_name: parsed.data.firstName,
     subscription_status: "free",
     worksheets_generated_this_month: 0,
-    worksheet_monthly_limit: 5,
+    worksheet_monthly_limit: 10,
     month_reset_date: getTodayString(),
   });
 

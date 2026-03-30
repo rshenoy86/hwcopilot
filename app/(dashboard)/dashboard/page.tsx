@@ -45,7 +45,7 @@ export default async function DashboardPage() {
     Math.round((profile.worksheets_generated_this_month / profile.worksheet_monthly_limit) * 100)
   );
 
-  const isNearLimit = profile.subscription_status === "free" && profile.worksheets_generated_this_month >= 4;
+  const isNearLimit = profile.subscription_status === "free" && profile.worksheets_generated_this_month >= 8;
   const isAtLimit = profile.worksheets_generated_this_month >= profile.worksheet_monthly_limit;
 
   const resetDate = getResetDate(profile.month_reset_date);
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
           {isAtLimit && profile.subscription_status === "free" && (
             <div className="rounded-lg bg-primary/10 border border-primary/20 p-3 flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-medium">You&apos;ve used all 5 free worksheets</p>
+                <p className="text-sm font-medium">You&apos;ve used all 10 free worksheets</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   Upgrade to Pro for 250 worksheets/month
                 </p>

@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
           .update({
             subscription_status: "free",
             stripe_subscription_id: null,
-            worksheet_monthly_limit: 5,
+            worksheet_monthly_limit: 10,
           })
           .eq("stripe_customer_id", customerId);
 
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
             .from("profiles")
             .update({
               subscription_status: "free",
-              worksheet_monthly_limit: 5,
+              worksheet_monthly_limit: 10,
             })
             .eq("stripe_customer_id", customerId);
         }

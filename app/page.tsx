@@ -23,7 +23,7 @@ const FAQ = [
   },
   {
     q: "What's the difference between Free and Pro?",
-    a: "Free gives you 5 worksheets per month and 1 child profile — enough to try it out. Pro ($12/month) gives you 250 worksheets, unlimited children, and AI Homework Help. Most families never come close to the 250-worksheet limit.",
+    a: "Free gives you 10 worksheets per month and 1 child profile — enough to try it out. Pro ($12/month) gives you 250 worksheets, unlimited children, and AI Homework Help. Most families never come close to the 250-worksheet limit.",
   },
   {
     q: "Can I cancel anytime?",
@@ -77,7 +77,7 @@ export default function HomePage() {
               </Button>
             </Link>
             <p className="text-sm text-muted-foreground">
-              5 free worksheets · No credit card needed
+              10 free worksheets · No credit card needed
             </p>
           </div>
         </div>
@@ -231,7 +231,7 @@ export default function HomePage() {
                 </div>
                 <ul className="space-y-2 mb-6">
                   {[
-                    "5 worksheets per month",
+                    "10 worksheets per month",
                     "1 child profile",
                     "All subjects & grade levels",
                     "Answer keys included",
@@ -328,7 +328,7 @@ export default function HomePage() {
             </Link>
           </div>
           <p className="mt-3 text-sm text-primary-foreground/60">
-            5 free worksheets every month. No credit card.
+            10 free worksheets every month. No credit card.
           </p>
         </div>
       </section>

@@ -378,7 +378,7 @@ export default function WorksheetGeneratorForm({
             <h3 className="font-semibold text-lg">Monthly limit reached</h3>
             <p className="text-muted-foreground mt-1">
               {subscriptionStatus === "free"
-                ? "You've used all 5 free worksheets this month."
+                ? "You've used all 10 free worksheets this month."
                 : "You've used all 250 worksheets this month."}
             </p>
           </div>

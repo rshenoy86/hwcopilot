@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
   if (profile.worksheets_generated_this_month >= profile.worksheet_monthly_limit) {
     const limitMsg =
       profile.subscription_status === "free"
-        ? "You've used all 5 free worksheets this month. Upgrade to Pro for 250 worksheets/month."
+        ? "You've used all 10 free worksheets this month. Upgrade to Pro for 250 worksheets/month."
         : `You've used all ${profile.worksheet_monthly_limit} worksheets this month. They'll reset at the start of next month.`;
     return NextResponse.json({ error: limitMsg, code: "LIMIT_REACHED" }, { status: 429 });
   }

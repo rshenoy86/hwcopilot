@@ -36,6 +36,9 @@ export async function signUp(formData: FormData) {
   });
 
   if (error) {
+    if (error.message.toLowerCase().includes("rate limit")) {
+      return { error: "Too many sign-up attempts right now. Please wait a few minutes and try again." };
+    }
     return { error: error.message };
   }
 

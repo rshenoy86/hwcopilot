@@ -41,7 +41,7 @@ export default function SignupPage() {
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-foreground">Create your account</h1>
           <p className="mt-2 text-muted-foreground">
-            Start with 5 free worksheets per month
+            Start with 10 free worksheets per month
           </p>
         </div>
 

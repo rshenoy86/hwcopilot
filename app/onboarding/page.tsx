@@ -264,7 +264,7 @@ export default function OnboardingPage() {
               <div className="bg-accent rounded-xl p-4 text-left space-y-2">
                 <p className="font-medium text-sm">Your free plan includes:</p>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>✓ 5 worksheets per month</li>
+                  <li>✓ 10 worksheets per month</li>
                   <li>✓ All subjects and grade levels</li>
                   <li>✓ Personalized to {childName}&apos;s interests</li>
                   <li>✓ Print-ready format</li>

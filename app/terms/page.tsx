@@ -62,7 +62,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-2">6. Subscriptions and Billing</h2>
-            <p>GuruBuddy offers a free tier (5 worksheets/month) and a Pro subscription ($12/month). Subscriptions are billed monthly and renew automatically. You may cancel at any time through the billing portal; cancellation takes effect at the end of the current billing period. All payments are processed by Stripe. We do not store payment card information.</p>
+            <p>GuruBuddy offers a free tier (10 worksheets/month) and a Pro subscription ($12/month). Subscriptions are billed monthly and renew automatically. You may cancel at any time through the billing portal; cancellation takes effect at the end of the current billing period. All payments are processed by Stripe. We do not store payment card information.</p>
             <p className="mt-2">Refunds are handled on a case-by-case basis. Contact us at support@gurubuddy.com for billing issues.</p>
           </section>
 
