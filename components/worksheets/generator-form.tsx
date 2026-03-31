@@ -432,10 +432,16 @@ export default function WorksheetGeneratorForm({
     setActiveScaffolding([]);
   }
 
+  const SUBJECTS_WITHOUT_THEMES = ["Social Studies"];
+
   function handleSubjectChange(s: string) {
     setSubject(s);
     setTopic("");
     setActiveScaffolding([]);
+    if (SUBJECTS_WITHOUT_THEMES.includes(s)) {
+      setTheme(null);
+      setCustomTheme("");
+    }
   }
 
   function toggleScaffolding(id: string) {
@@ -719,8 +725,8 @@ export default function WorksheetGeneratorForm({
           </div>
         </div>
 
-        {/* Theme picker */}
-        <div className="space-y-3">
+        {/* Theme picker — hidden for subjects where content is the topic */}
+        {subject && !SUBJECTS_WITHOUT_THEMES.includes(subject) && <div className="space-y-3">
           <Label>
             Worksheet theme{" "}
             <span className="text-muted-foreground font-normal">(optional — makes every problem about one topic)</span>
@@ -793,7 +799,7 @@ export default function WorksheetGeneratorForm({
               className="flex-1 h-8 rounded-md border border-input bg-background px-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
           </div>
-        </div>
+        </div>}
 
         {/* Scaffolding options */}
         {subject && scaffoldingOptions.length > 0 && (
