@@ -8,7 +8,7 @@ const schema = z.object({
   childId: z.string().uuid(),
   subject: z.string().min(1),
   topic: z.string().min(1),
-  difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  difficulty: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
   numQuestions: z.union([z.literal(6), z.literal(8), z.literal(10)]),
   specialInstructions: z.string().optional(),
   theme: z.string().max(50).optional(),

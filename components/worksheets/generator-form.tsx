@@ -31,6 +31,7 @@ const DIFFICULTY_OPTIONS = [
   { value: "1", label: "Easy Review", description: "Scaffolded, review of earlier concepts" },
   { value: "2", label: "Standard", description: "On-grade level practice" },
   { value: "3", label: "Challenge", description: "Stretch problems above grade level" },
+  { value: "4", label: "Next Grade", description: "Sneak peek at next grade's concepts" },
 ];
 
 const QUESTION_COUNTS = [6, 8, 10];
@@ -352,7 +353,7 @@ export default function WorksheetGeneratorForm({
   const [selectedChildId, setSelectedChildId] = useState(preselectedChildId || children[0]?.id || "");
   const [subject, setSubject] = useState(preselectedSubject || "");
   const [topic, setTopic] = useState(preselectedTopic || "");
-  const [difficulty, setDifficulty] = useState<"1" | "2" | "3">("2");
+  const [difficulty, setDifficulty] = useState<"1" | "2" | "3" | "4">("2");
   const [numQuestions, setNumQuestions] = useState<6 | 8 | 10>(8);
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [activeScaffolding, setActiveScaffolding] = useState<string[]>([]);
@@ -688,7 +689,7 @@ export default function WorksheetGeneratorForm({
               <button
                 key={opt.value}
                 type="button"
-                onClick={() => setDifficulty(opt.value as "1" | "2" | "3")}
+                onClick={() => setDifficulty(opt.value as "1" | "2" | "3" | "4")}
                 className={`p-3 rounded-lg border text-left transition-all active:scale-95 ${
                   difficulty === opt.value
                     ? "border-primary bg-accent ring-1 ring-primary"

@@ -12,7 +12,7 @@ export interface WorksheetGenerationParams {
   grade: Grade;
   subject: string;
   topic: string;
-  difficulty: 1 | 2 | 3;
+  difficulty: 1 | 2 | 3 | 4;
   numQuestions: 6 | 8 | 10;
   interests: string;
   theme?: string;
@@ -28,6 +28,7 @@ const DIFFICULTY_LABELS: Record<number, string> = {
   1: "Easy Review (scaffolded, review of prior concepts)",
   2: "Standard (on-grade level)",
   3: "Challenge (stretch, above grade level)",
+  4: "Next Grade Preview",
 };
 
 function buildSystemPrompt(): string {
@@ -58,9 +59,20 @@ Always respond with valid JSON matching this exact structure:
 Do not include any text outside the JSON. Do not include markdown code fences.`;
 }
 
+const NEXT_GRADE: Record<string, string> = {
+  K: "Grade 1", "1": "Grade 2", "2": "Grade 3", "3": "Grade 4",
+  "4": "Grade 5", "5": "Grade 6", "6": "Grade 7", "7": "Grade 8",
+  "8": "Grade 8", // no grade 9 in scope — treat as advanced Grade 8
+};
+
 function buildUserPrompt(params: WorksheetGenerationParams): string {
   const gradeLabel = params.grade === "K" ? "Kindergarten" : `Grade ${params.grade}`;
-  const difficultyLabel = DIFFICULTY_LABELS[params.difficulty];
+  const nextGradeLabel = NEXT_GRADE[params.grade];
+  const isNextGrade = params.difficulty === 4;
+
+  const difficultyLabel = isNextGrade
+    ? `Next Grade Preview — introduce early ${nextGradeLabel} concepts on this topic`
+    : DIFFICULTY_LABELS[params.difficulty];
 
   return `Generate a worksheet for a ${gradeLabel} student.
 Subject: ${params.subject}
@@ -77,7 +89,7 @@ Requirements:
 - Use age-appropriate vocabulary for ${gradeLabel}
 - For math: use clear notation, lay out multi-step problems clearly
 - For reading/ELA: include a short passage if the topic calls for it
-- Difficulty guide: Easy = review/scaffolded, Standard = on-grade, Challenge = stretch
+- Difficulty guide: Easy = review/scaffolded, Standard = on-grade, Challenge = stretch${isNextGrade ? `, Next Grade Preview = gently introduce how ${nextGradeLabel} approaches this topic — slightly harder numbers, new vocabulary, or an extra step; keep it approachable but clearly a step up` : ""}
 - Make it engaging — this should feel like a fun challenge, not a chore
 - For K-2: use simpler numbers, shorter sentences, more scaffolding
 - For 6-8: use more complex vocabulary and multi-step reasoning
