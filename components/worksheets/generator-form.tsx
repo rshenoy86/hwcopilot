@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Zap } from "lucide-react";
+import { Loader2, Zap, Camera, CheckCircle, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -359,6 +359,12 @@ export default function WorksheetGeneratorForm({
   const [theme, setTheme] = useState<string | null>(null);
   const [customTheme, setCustomTheme] = useState("");
 
+  // Photo upload state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [photoAnalyzing, setPhotoAnalyzing] = useState(false);
+  const [photoResult, setPhotoResult] = useState<{ subject: string; topic: string; description: string } | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
   const selectedChild = children.find((c) => c.id === selectedChildId);
   const availableSubjects = selectedChild ? getSubjectsForGrade(selectedChild.grade) : [];
   const availableTopics = selectedChild && subject ? getTopicsForSubjectAndGrade(selectedChild.grade, subject) : [];
@@ -369,6 +375,55 @@ export default function WorksheetGeneratorForm({
   const genericThemesFiltered = gradeThemes.filter(
     (t) => !personalThemes.some((p) => p.toLowerCase() === t.label.toLowerCase())
   );
+
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!fileInputRef.current) return;
+    fileInputRef.current.value = "";
+    if (!file || !selectedChild) return;
+
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      setPhotoError("Image must be under 10MB.");
+      return;
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      setPhotoError("Please use a JPG, PNG, or WebP image.");
+      return;
+    }
+
+    setPhotoAnalyzing(true);
+    setPhotoResult(null);
+    setPhotoError(null);
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+
+      const res = await fetch("/api/worksheets/extract-topic", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: base64, mediaType: file.type, grade: selectedChild.grade }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to analyze image");
+      setPhotoResult(data);
+    } catch {
+      setPhotoError("Couldn't read that image. Try a clearer photo or pick the topic manually.");
+    } finally {
+      setPhotoAnalyzing(false);
+    }
+  }
+
+  function confirmPhotoResult() {
+    if (!photoResult) return;
+    handleSubjectChange(photoResult.subject);
+    setTopic(photoResult.topic);
+    setPhotoResult(null);
+  }
 
   function handleChildChange(childId: string) {
     setSelectedChildId(childId);
@@ -520,6 +575,70 @@ export default function WorksheetGeneratorForm({
             </p>
           )}
         </div>
+
+        {/* Photo upload */}
+        {selectedChild && (
+          <div className="space-y-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={handlePhotoUpload}
+            />
+
+            {!photoResult && !photoAnalyzing && (
+              <button
+                type="button"
+                onClick={() => { setPhotoError(null); fileInputRef.current?.click(); }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-dashed border-border text-sm text-muted-foreground hover:border-primary/50 hover:text-foreground transition-colors"
+              >
+                <Camera className="h-4 w-4" />
+                Upload a homework problem to auto-fill subject &amp; topic
+              </button>
+            )}
+
+            {photoAnalyzing && (
+              <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg border border-dashed border-border text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                Analyzing problem...
+              </div>
+            )}
+
+            {photoResult && (
+              <div className="rounded-lg border border-primary/30 bg-accent/40 p-3 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-0.5">We found</p>
+                    <p className="font-medium text-sm">{photoResult.subject} — {photoResult.topic}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{photoResult.description}</p>
+                  </div>
+                  <button type="button" onClick={() => setPhotoResult(null)} className="text-muted-foreground hover:text-foreground shrink-0">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <Button type="button" size="sm" onClick={confirmPhotoResult} className="gap-1">
+                    <CheckCircle className="h-3.5 w-3.5" />
+                    Looks right
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => { setPhotoResult(null); fileInputRef.current?.click(); }}
+                  >
+                    Try another photo
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {photoError && (
+              <p className="text-xs text-destructive">{photoError}</p>
+            )}
+          </div>
+        )}
 
         {/* Subject */}
         <div className="space-y-1.5">
