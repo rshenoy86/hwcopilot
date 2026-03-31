@@ -4,12 +4,12 @@ import WorksheetGeneratorForm from "@/components/worksheets/generator-form";
 import type { Child, Profile } from "@/types";
 
 interface PageProps {
-  searchParams: Promise<{ child?: string }>;
+  searchParams: Promise<{ child?: string; subject?: string; topic?: string }>;
 }
 
 export default async function NewWorksheetPage({ searchParams }: PageProps) {
   const supabase = await createClient();
-  const { child: preselectedChildId } = await searchParams;
+  const { child: preselectedChildId, subject: preselectedSubject, topic: preselectedTopic } = await searchParams;
 
   const {
     data: { user },
@@ -47,6 +47,8 @@ export default async function NewWorksheetPage({ searchParams }: PageProps) {
       <WorksheetGeneratorForm
         children={children}
         preselectedChildId={preselectedChildId}
+        preselectedSubject={preselectedSubject}
+        preselectedTopic={preselectedTopic}
         isAtLimit={isAtLimit}
         subscriptionStatus={profile.subscription_status}
       />

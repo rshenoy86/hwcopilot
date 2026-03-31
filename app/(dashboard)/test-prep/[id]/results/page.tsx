@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle, ChevronRight, ClipboardList, BookOpen } from "lucide-react";
-import type { Test, TestSubmission, Child, QuestionResult } from "@/types";
+import type { Test, TestSubmission, Child, QuestionResult, TestQuestion } from "@/types";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -48,6 +48,8 @@ export default async function TestResultsPage({ params }: PageProps) {
   const sectionAResults = feedback.question_results.filter((_, i) => i < 5);
   const sectionBResults = feedback.question_results.filter((_, i) => i >= 5 && i < 9);
   const sectionCResults = feedback.question_results.filter((_, i) => i >= 9);
+
+  const questionsMap = new Map<number, TestQuestion>(test.questions.map((q) => [q.number, q]));
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -110,7 +112,7 @@ export default async function TestResultsPage({ params }: PageProps) {
                 <p className="text-sm font-medium text-muted-foreground mb-2">{label}</p>
                 <div className="space-y-2">
                   {results.map((r) => (
-                    <QuestionResultRow key={r.number} result={r} />
+                    <QuestionResultRow key={r.number} result={r} question={questionsMap.get(r.number)} />
                   ))}
                 </div>
               </div>
@@ -163,10 +165,10 @@ export default async function TestResultsPage({ params }: PageProps) {
             Generate Another Test
           </Button>
         </Link>
-        <Link href="/worksheets/new" className="flex-1">
+        <Link href={`/worksheets/new?child=${child.id}&subject=${encodeURIComponent(test.subject)}&topic=${encodeURIComponent(test.topic)}`} className="flex-1">
           <Button variant="outline" className="w-full">
             <BookOpen className="h-4 w-4 mr-1" />
-            Create Practice Worksheet
+            Practice Worksheet for This Topic
           </Button>
         </Link>
         <Link href="/test-prep">
@@ -180,30 +182,69 @@ export default async function TestResultsPage({ params }: PageProps) {
   );
 }
 
-function QuestionResultRow({ result }: { result: QuestionResult }) {
+function QuestionResultRow({ result, question }: { result: QuestionResult; question?: TestQuestion }) {
+  const correctLetter = question?.correct_answer?.trim().charAt(0).toUpperCase();
+  const studentLetter = result.student_answer?.trim().charAt(0).toUpperCase();
+
   return (
-    <div className={`flex gap-3 p-3 rounded-lg border text-sm ${result.correct ? "border-green-200 bg-green-50/50" : "border-red-200 bg-red-50/50"}`}>
-      <div className="shrink-0 mt-0.5">
-        {result.correct
-          ? <CheckCircle className="h-4 w-4 text-green-600" />
-          : <XCircle className="h-4 w-4 text-red-500" />
-        }
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium">Q{result.number}</span>
-          <span className="text-muted-foreground">
-            {result.points_earned}/{result.points_possible} pts
-          </span>
+    <div className={`p-3 rounded-lg border text-sm ${result.correct ? "border-green-200 bg-green-50/50" : "border-red-200 bg-red-50/50"}`}>
+      <div className="flex gap-3">
+        <div className="shrink-0 mt-0.5">
+          {result.correct
+            ? <CheckCircle className="h-4 w-4 text-green-600" />
+            : <XCircle className="h-4 w-4 text-red-500" />
+          }
+        </div>
+        <div className="flex-1 min-w-0 space-y-1.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-medium">Q{result.number}</span>
+            <span className="text-muted-foreground">{result.points_earned}/{result.points_possible} pts</span>
+          </div>
+
+          {question?.question && (
+            <p className="font-medium leading-snug">{question.question}</p>
+          )}
+
+          {/* MC options — highlight correct in green, wrong student choice in red */}
+          {question?.type === "multiple_choice" && question.options && (
+            <div className="space-y-0.5 mt-1">
+              {question.options.map((opt) => {
+                const letter = opt.trim().charAt(0).toUpperCase();
+                const isCorrect = letter === correctLetter;
+                const isWrongPick = letter === studentLetter && !result.correct;
+                return (
+                  <div
+                    key={opt}
+                    className={`px-2 py-0.5 rounded text-xs ${
+                      isCorrect
+                        ? "bg-green-100 text-green-800 font-medium"
+                        : isWrongPick
+                        ? "bg-red-100 text-red-700 line-through"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {opt}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* For open questions show correct answer when wrong */}
+          {!result.correct && question && question.type !== "multiple_choice" && question.correct_answer && (
+            <p className="text-green-700 text-xs">
+              <span className="font-medium">Correct answer: </span>{question.correct_answer}
+            </p>
+          )}
+
           {result.student_answer && (
-            <span className="text-muted-foreground">
-              · Student wrote: &ldquo;{result.student_answer}&rdquo;
-            </span>
+            <p className="text-muted-foreground text-xs">Your answer: &ldquo;{result.student_answer}&rdquo;</p>
+          )}
+
+          {result.feedback && (
+            <p className="text-muted-foreground">{result.feedback}</p>
           )}
         </div>
-        {result.feedback && (
-          <p className="text-muted-foreground mt-0.5">{result.feedback}</p>
-        )}
       </div>
     </div>
   );

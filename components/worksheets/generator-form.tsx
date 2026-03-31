@@ -21,6 +21,8 @@ import type { Child, SubscriptionStatus } from "@/types";
 interface GeneratorFormProps {
   children: Child[];
   preselectedChildId?: string;
+  preselectedSubject?: string;
+  preselectedTopic?: string;
   isAtLimit: boolean;
   subscriptionStatus: SubscriptionStatus;
 }
@@ -338,6 +340,8 @@ function getScaffoldingForSubject(subject: string) {
 export default function WorksheetGeneratorForm({
   children,
   preselectedChildId,
+  preselectedSubject,
+  preselectedTopic,
   isAtLimit,
   subscriptionStatus,
 }: GeneratorFormProps) {
@@ -346,8 +350,8 @@ export default function WorksheetGeneratorForm({
   const [error, setError] = useState<string | null>(null);
 
   const [selectedChildId, setSelectedChildId] = useState(preselectedChildId || children[0]?.id || "");
-  const [subject, setSubject] = useState("");
-  const [topic, setTopic] = useState("");
+  const [subject, setSubject] = useState(preselectedSubject || "");
+  const [topic, setTopic] = useState(preselectedTopic || "");
   const [difficulty, setDifficulty] = useState<"1" | "2" | "3">("2");
   const [numQuestions, setNumQuestions] = useState<6 | 8 | 10>(8);
   const [specialInstructions, setSpecialInstructions] = useState("");
