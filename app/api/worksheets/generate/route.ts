@@ -112,6 +112,7 @@ export async function POST(request: NextRequest) {
         difficulty: parsed.data.difficulty,
         grade: child.grade,
         worksheet_type: parsed.data.dyslexia_mode ? "dyslexia" : "practice",
+        theme: parsed.data.theme ?? null,
         content: generated.content,
         answer_key: generated.answer_key,
       })

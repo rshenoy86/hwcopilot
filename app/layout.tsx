@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
+import { Lexend, Fredoka } from "next/font/google";
 import "./globals.css";
 
 const lexend = Lexend({
   subsets: ["latin"],
   variable: "--font-lexend",
+  display: "swap",
+  weight: ["400", "600", "700"],
+});
+
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  variable: "--font-fredoka",
   display: "swap",
   weight: ["400", "600", "700"],
 });
@@ -26,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full ${lexend.variable}`}>
+    <html lang="en" className={`h-full ${lexend.variable} ${fredoka.variable}`}>
       <body className="min-h-full flex flex-col bg-background text-foreground antialiased">
         {children}
       </body>

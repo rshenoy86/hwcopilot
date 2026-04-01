@@ -39,6 +39,7 @@ export interface Worksheet {
   difficulty: 1 | 2 | 3;
   grade: Grade;
   worksheet_type: string;
+  theme?: string | null;
   content: WorksheetContent;
   answer_key: AnswerKeyItem[];
   created_at: string;

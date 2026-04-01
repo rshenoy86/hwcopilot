@@ -6,6 +6,8 @@ import { Printer, Plus, ArrowLeft, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Child, Worksheet } from "@/types";
+import { getThemeConfig } from "@/lib/theme-config";
+import { ThemeSVG } from "./theme-svgs";
 
 interface WorksheetDisplayProps {
   worksheet: Worksheet;
@@ -52,6 +54,8 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
   const gradeLabel = child.grade === "K" ? "Kindergarten" : `Grade ${child.grade}`;
   const isDyslexia = worksheet.worksheet_type === "dyslexia";
   const isEarlyGrade = child.grade === "K" || child.grade === "1" || child.grade === "2";
+  const theme = getThemeConfig(worksheet.theme);
+  const hasTheme = !!worksheet.theme;
 
   // Style tokens
   const bodyFont = isDyslexia
@@ -109,129 +113,236 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
 
       {/* Worksheet */}
       <div
-        className={`print-page max-w-2xl mx-auto border border-border rounded-xl shadow-sm p-8 ${pageBg} ${bodyFont} ${bodySize} ${lineHeight} ${letterSpacing}`}
+        className={`print-page max-w-2xl mx-auto border rounded-xl shadow-sm ${pageBg} ${bodyFont} ${bodySize} ${lineHeight} ${letterSpacing} overflow-hidden`}
+        style={{ borderColor: hasTheme ? theme.primary : undefined }}
       >
-        {/* Header */}
-        <div className="mb-6 text-center">
-          <h1 className={`font-bold ${isDyslexia ? "text-2xl" : "text-xl"}`}>
-            {child.name}&apos;s {worksheet.subject} Practice
-          </h1>
-          <div className="flex items-center justify-between mt-3 text-sm text-muted-foreground">
-            <span>Topic: <strong className="text-foreground">{worksheet.topic}</strong></span>
-            <span>Date: <span className="border-b border-dashed border-muted-foreground">________________</span></span>
-            <span>Difficulty: {DIFFICULTY_STARS[worksheet.difficulty]}</span>
-          </div>
-          <div className="text-center text-xs text-muted-foreground mt-1">
-            {gradeLabel} · {DIFFICULTY_LABELS[worksheet.difficulty]}
-          </div>
-        </div>
+        {/* Themed top bar */}
+        {hasTheme && (
+          <div
+            className="h-2 w-full"
+            style={{ backgroundColor: theme.primary }}
+          />
+        )}
 
-        <Separator className="my-4" />
-
-        {/* Learn It */}
-        <section className={isDyslexia ? "mb-10" : "mb-6"}>
-          <h2 className={`font-bold ${sectionHeaderSize} mb-3`}>📚 LET&apos;S LEARN IT</h2>
-          <div className={`${isEarlyGrade || isDyslexia ? "bg-blue-50 rounded-lg" : ""} ${isDyslexia ? "p-5" : "p-3"} ${maxLineWidth}`}>
-            <RenderBlock text={worksheet.content.learn_it} />
-          </div>
-        </section>
-
-        {/* Worked Example */}
-        <section className={isDyslexia ? "mb-10" : "mb-6"}>
-          <h2 className={`font-bold ${sectionHeaderSize} mb-3`}>✏️ WORKED EXAMPLE</h2>
-          <div className={`bg-amber-50 rounded-lg border border-amber-100 ${isDyslexia ? "p-5" : "p-3"} ${maxLineWidth}`}>
-            <RenderBlock text={worksheet.content.worked_example} />
-          </div>
-        </section>
-
-        <Separator className="my-4" />
-
-        {/* Problems */}
-        <section className={isDyslexia ? "mb-10" : "mb-6"}>
-          <h2 className={`font-bold ${sectionHeaderSize} mb-4`}>📝 YOUR TURN</h2>
-          <div className={problemSpacing}>
-            {worksheet.content.problems.map((problem, i) => (
-              <div key={i} className={isDyslexia ? "space-y-3" : "space-y-1"}>
-                <p className={`font-medium ${maxLineWidth}`}>
-                  {i + 1}. <RenderBlock text={problem} className="inline" />
-                </p>
-                {/* Answer lines */}
-                <div className={isDyslexia ? "space-y-3 mt-3" : isEarlyGrade ? "space-y-2 mt-2" : "mt-2"}>
-                  {isDyslexia ? (
-                    <>
-                      <div className="border-b-2 border-gray-400 h-10" />
-                      <div className="border-b-2 border-gray-400 h-10" />
-                      <div className="border-b-2 border-gray-400 h-10" />
-                    </>
-                  ) : isEarlyGrade ? (
-                    <>
-                      <div className="border-b border-gray-300 h-8" />
-                      <div className="border-b border-gray-300 h-8" />
-                    </>
-                  ) : (
-                    <div className="border-b border-gray-300 h-7 mt-1" />
-                  )}
-                </div>
+        <div className="p-8">
+          {/* Header */}
+          <div className="mb-6 relative">
+            {/* SVG character — top right corner */}
+            {hasTheme && (
+              <div className="absolute -top-2 right-0 w-24 h-24 opacity-95">
+                <ThemeSVG
+                  theme={worksheet.theme}
+                  worksheetId={worksheet.id}
+                  className="w-full h-full drop-shadow-md"
+                />
               </div>
-            ))}
+            )}
+
+            <div className={hasTheme ? "pr-24 text-center" : "text-center"}>
+              <h1
+                className={`font-bold ${isDyslexia ? "text-2xl" : "text-xl"} ${hasTheme ? "font-[family-name:var(--font-fredoka,sans-serif)]" : ""}`}
+                style={hasTheme ? { color: theme.dark } : undefined}
+              >
+                {child.name}&apos;s {worksheet.subject} Practice
+              </h1>
+
+              {hasTheme && (
+                <div
+                  className="inline-flex items-center gap-1 mt-1 px-3 py-0.5 rounded-full text-xs font-semibold text-white"
+                  style={{ backgroundColor: theme.primary }}
+                >
+                  {theme.emoji} {theme.label} Theme
+                </div>
+              )}
+
+              <div className="flex items-center justify-between mt-3 text-sm text-muted-foreground">
+                <span>Topic: <strong className="text-foreground">{worksheet.topic}</strong></span>
+                <span>Date: <span className="border-b border-dashed border-muted-foreground">________________</span></span>
+                <span>Difficulty: {DIFFICULTY_STARS[worksheet.difficulty]}</span>
+              </div>
+              <div className="text-center text-xs text-muted-foreground mt-1">
+                {gradeLabel} · {DIFFICULTY_LABELS[worksheet.difficulty]}
+              </div>
+            </div>
           </div>
-        </section>
 
-        <Separator className="my-4" />
+          <Separator className="my-4" style={hasTheme ? { backgroundColor: theme.primary, opacity: 0.3 } : undefined} />
 
-        {/* Challenge */}
-        <section className={isDyslexia ? "mb-10" : "mb-6"}>
-          <h2 className={`font-bold ${sectionHeaderSize} mb-3`}>⭐ CHALLENGE</h2>
-          <div className={`bg-purple-50 rounded-lg border border-purple-100 ${isDyslexia ? "p-5" : "p-3"} ${maxLineWidth}`}>
-            <RenderBlock text={worksheet.content.challenge} />
-          </div>
-          <div className={`mt-3 ${isDyslexia ? "space-y-3" : "space-y-2"}`}>
-            <div className={`border-b h-7 ${isDyslexia ? "border-b-2 border-gray-400 h-10" : "border-gray-300"}`} />
-            <div className={`border-b h-7 ${isDyslexia ? "border-b-2 border-gray-400 h-10" : "border-gray-300"}`} />
-          </div>
-        </section>
+          {/* Learn It */}
+          <section className={isDyslexia ? "mb-10" : "mb-6"}>
+            <h2
+              className={`font-bold ${sectionHeaderSize} mb-3 flex items-center gap-2`}
+            >
+              {hasTheme ? (
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white text-sm font-bold"
+                  style={{ backgroundColor: theme.primary }}
+                >
+                  📚 LET&apos;S LEARN IT
+                </span>
+              ) : (
+                "📚 LET'S LEARN IT"
+              )}
+            </h2>
+            <div
+              className={`rounded-lg ${isDyslexia ? "p-5" : "p-3"} ${maxLineWidth}`}
+              style={hasTheme
+                ? { backgroundColor: theme.light, borderLeft: `3px solid ${theme.primary}` }
+                : { backgroundColor: "rgb(239 246 255)" }
+              }
+            >
+              <RenderBlock text={worksheet.content.learn_it} />
+            </div>
+          </section>
 
-        <Separator className="my-4" />
+          {/* Worked Example */}
+          <section className={isDyslexia ? "mb-10" : "mb-6"}>
+            <h2 className={`font-bold ${sectionHeaderSize} mb-3`}>
+              {hasTheme ? (
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white text-sm font-bold"
+                  style={{ backgroundColor: theme.dark }}
+                >
+                  ✏️ WORKED EXAMPLE
+                </span>
+              ) : (
+                "✏️ WORKED EXAMPLE"
+              )}
+            </h2>
+            <div
+              className={`rounded-lg border ${isDyslexia ? "p-5" : "p-3"} ${maxLineWidth}`}
+              style={hasTheme
+                ? { backgroundColor: "rgb(255 251 235)", borderColor: theme.primary + "44" }
+                : { backgroundColor: "rgb(255 251 235)", borderColor: "rgb(254 243 199)" }
+              }
+            >
+              <RenderBlock text={worksheet.content.worked_example} />
+            </div>
+          </section>
 
-        {/* Self-assessment */}
-        <section>
-          <p className={`font-medium ${isDyslexia ? "text-base" : ""}`}>
-            HOW DID I DO?{" "}
-            <span className="font-normal">
-              ☐ I got it!{"  "}
-              ☐ I need more help{"  "}
-              ☐ Too easy!
-            </span>
-          </p>
-        </section>
+          <Separator className="my-4" style={hasTheme ? { backgroundColor: theme.primary, opacity: 0.3 } : undefined} />
+
+          {/* Problems */}
+          <section className={isDyslexia ? "mb-10" : "mb-6"}>
+            <h2 className={`font-bold ${sectionHeaderSize} mb-4`}>
+              {hasTheme ? (
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white text-sm font-bold"
+                  style={{ backgroundColor: theme.primary }}
+                >
+                  📝 YOUR TURN
+                </span>
+              ) : (
+                "📝 YOUR TURN"
+              )}
+            </h2>
+            <div className={problemSpacing}>
+              {worksheet.content.problems.map((problem, i) => (
+                <div key={i} className={isDyslexia ? "space-y-3" : "space-y-1"}>
+                  <p className={`font-medium ${maxLineWidth}`}>
+                    {i + 1}. <RenderBlock text={problem} className="inline" />
+                  </p>
+                  {/* Answer lines */}
+                  <div className={isDyslexia ? "space-y-3 mt-3" : isEarlyGrade ? "space-y-2 mt-2" : "mt-2"}>
+                    {isDyslexia ? (
+                      <>
+                        <div className="border-b-2 border-gray-400 h-10" />
+                        <div className="border-b-2 border-gray-400 h-10" />
+                        <div className="border-b-2 border-gray-400 h-10" />
+                      </>
+                    ) : isEarlyGrade ? (
+                      <>
+                        <div className="border-b border-gray-300 h-8" />
+                        <div className="border-b border-gray-300 h-8" />
+                      </>
+                    ) : (
+                      <div className="border-b border-gray-300 h-7 mt-1" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <Separator className="my-4" style={hasTheme ? { backgroundColor: theme.primary, opacity: 0.3 } : undefined} />
+
+          {/* Challenge */}
+          <section className={isDyslexia ? "mb-10" : "mb-6"}>
+            <h2 className={`font-bold ${sectionHeaderSize} mb-3`}>
+              {hasTheme ? (
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white text-sm font-bold"
+                  style={{ backgroundColor: theme.dark }}
+                >
+                  ⭐ CHALLENGE
+                </span>
+              ) : (
+                "⭐ CHALLENGE"
+              )}
+            </h2>
+            <div
+              className={`rounded-lg border ${isDyslexia ? "p-5" : "p-3"} ${maxLineWidth}`}
+              style={hasTheme
+                ? { backgroundColor: theme.light, borderColor: theme.primary + "55" }
+                : { backgroundColor: "rgb(250 245 255)", borderColor: "rgb(233 213 255)" }
+              }
+            >
+              <RenderBlock text={worksheet.content.challenge} />
+            </div>
+            <div className={`mt-3 ${isDyslexia ? "space-y-3" : "space-y-2"}`}>
+              <div className={`border-b h-7 ${isDyslexia ? "border-b-2 border-gray-400 h-10" : "border-gray-300"}`} />
+              <div className={`border-b h-7 ${isDyslexia ? "border-b-2 border-gray-400 h-10" : "border-gray-300"}`} />
+            </div>
+          </section>
+
+          <Separator className="my-4" style={hasTheme ? { backgroundColor: theme.primary, opacity: 0.3 } : undefined} />
+
+          {/* Self-assessment */}
+          <section>
+            <p className={`font-medium ${isDyslexia ? "text-base" : ""}`}>
+              HOW DID I DO?{" "}
+              <span className="font-normal">
+                ☐ I got it!{"  "}
+                ☐ I need more help{"  "}
+                ☐ Too easy!
+              </span>
+            </p>
+          </section>
+        </div>
       </div>
 
       {/* Answer Key */}
       {showAnswerKey && (
         <div
-          className={`print-page-break print-page max-w-2xl mx-auto border border-border rounded-xl shadow-sm p-8 mt-6 ${pageBg} ${bodyFont} ${bodySize} ${lineHeight} ${letterSpacing}`}
+          className={`print-page-break print-page max-w-2xl mx-auto border rounded-xl shadow-sm mt-6 overflow-hidden ${pageBg} ${bodyFont} ${bodySize} ${lineHeight} ${letterSpacing}`}
+          style={{ borderColor: hasTheme ? theme.primary : undefined }}
         >
-          <h2 className={`font-bold text-center mb-2 ${isDyslexia ? "text-2xl" : "text-xl"}`}>
-            {child.name} — Answer Key — {today}
-          </h2>
-          <p className="text-center text-sm text-muted-foreground mb-6">
-            {worksheet.subject}: {worksheet.topic} · {gradeLabel}
-          </p>
+          {hasTheme && <div className="h-2 w-full" style={{ backgroundColor: theme.primary }} />}
+          <div className="p-8">
+            <h2 className={`font-bold text-center mb-2 ${isDyslexia ? "text-2xl" : "text-xl"} ${hasTheme ? "font-[family-name:var(--font-fredoka,sans-serif)]" : ""}`}
+              style={hasTheme ? { color: theme.dark } : undefined}
+            >
+              {child.name} — Answer Key — {today}
+            </h2>
+            <p className="text-center text-sm text-muted-foreground mb-6">
+              {worksheet.subject}: {worksheet.topic} · {gradeLabel}
+            </p>
 
-          <Separator className="mb-4" />
+            <Separator className="mb-4" style={hasTheme ? { backgroundColor: theme.primary, opacity: 0.3 } : undefined} />
 
-          <div className={problemSpacing}>
-            {worksheet.answer_key.map((item) => (
-              <div key={item.number} className="flex gap-3">
-                <span className="font-bold w-6 shrink-0">{item.number}.</span>
-                <div>
-                  <p className="font-semibold"><RenderBlock text={item.answer} /></p>
-                  {item.explanation && (
-                    <p className="text-sm text-muted-foreground mt-0.5">{item.explanation}</p>
-                  )}
+            <div className={problemSpacing}>
+              {worksheet.answer_key.map((item) => (
+                <div key={item.number} className="flex gap-3">
+                  <span className="font-bold w-6 shrink-0">{item.number}.</span>
+                  <div>
+                    <p className="font-semibold"><RenderBlock text={item.answer} /></p>
+                    {item.explanation && (
+                      <p className="text-sm text-muted-foreground mt-0.5">{item.explanation}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
