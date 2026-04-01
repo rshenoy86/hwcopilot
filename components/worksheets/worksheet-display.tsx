@@ -124,21 +124,41 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
           />
         )}
 
-        <div className="p-8">
-          {/* Header */}
-          <div className="mb-6 relative">
-            {/* SVG character — top right corner */}
+        <div className="p-8 relative pb-24">
+          {/* Bottom corner characters */}
+          {hasTheme && (
+            <>
+              <div className="absolute bottom-4 left-4 w-14 h-14 opacity-70 pointer-events-none">
+                {worksheet.theme_image_url ? (
+                  <img src={worksheet.theme_image_url} alt="" className="w-full h-full object-contain" />
+                ) : (
+                  <ThemeSVG theme={worksheet.theme} worksheetId={worksheet.id + "-bl"} className="w-full h-full drop-shadow-sm" />
+                )}
+              </div>
+              <div className="absolute bottom-4 right-4 w-14 h-14 opacity-70 pointer-events-none">
+                {worksheet.theme_image_url ? (
+                  <img src={worksheet.theme_image_url} alt="" className="w-full h-full object-contain" />
+                ) : (
+                  <ThemeSVG theme={worksheet.theme} worksheetId={worksheet.id + "-br"} className="w-full h-full drop-shadow-sm" />
+                )}
+              </div>
+            </>
+          )}
+
+          {/* Header — characters on both sides, title centered */}
+          <div className="flex items-start gap-3 mb-6">
+            {/* Top-left character */}
             {hasTheme && (
-              <div className="absolute -top-2 right-0 w-24 h-24 opacity-95">
-                <ThemeSVG
-                  theme={worksheet.theme}
-                  worksheetId={worksheet.id}
-                  className="w-full h-full drop-shadow-md"
-                />
+              <div className="w-20 h-20 shrink-0">
+                {worksheet.theme_image_url ? (
+                  <img src={worksheet.theme_image_url} alt="" className="w-full h-full object-contain drop-shadow-md" />
+                ) : (
+                  <ThemeSVG theme={worksheet.theme} worksheetId={worksheet.id + "-tl"} className="w-full h-full drop-shadow-md" />
+                )}
               </div>
             )}
 
-            <div className={hasTheme ? "pr-24 text-center" : "text-center"}>
+            <div className="flex-1 text-center min-w-0">
               <h1
                 className={`font-bold ${isDyslexia ? "text-2xl" : "text-xl"} ${hasTheme ? "font-[family-name:var(--font-fredoka,sans-serif)]" : ""}`}
                 style={hasTheme ? { color: theme.dark } : undefined}
@@ -151,7 +171,7 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
                   className="inline-flex items-center gap-1 mt-1 px-3 py-0.5 rounded-full text-xs font-semibold text-white"
                   style={{ backgroundColor: theme.primary }}
                 >
-                  {theme.emoji} {theme.label} Theme
+                  {theme.emoji} {worksheet.theme}
                 </div>
               )}
 
@@ -164,6 +184,17 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
                 {gradeLabel} · {DIFFICULTY_LABELS[worksheet.difficulty]}
               </div>
             </div>
+
+            {/* Top-right character */}
+            {hasTheme && (
+              <div className="w-24 h-24 shrink-0">
+                {worksheet.theme_image_url ? (
+                  <img src={worksheet.theme_image_url} alt="" className="w-full h-full object-contain drop-shadow-md" />
+                ) : (
+                  <ThemeSVG theme={worksheet.theme} worksheetId={worksheet.id} className="w-full h-full drop-shadow-md" />
+                )}
+              </div>
+            )}
           </div>
 
           <Separator className="my-4" style={hasTheme ? { backgroundColor: theme.primary, opacity: 0.3 } : undefined} />

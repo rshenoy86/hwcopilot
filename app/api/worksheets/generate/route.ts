@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { generateWorksheet } from "@/lib/ai/worksheet";
+import { getOrGenerateThemeImage } from "@/lib/ai/theme-image";
 import { getTodayString, isPeriodExpired } from "@/lib/utils";
 import { z } from "zod";
 
@@ -86,20 +87,24 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const generated = await generateWorksheet(
-      {
-        childName: child.name,
-        grade: child.grade,
-        subject: parsed.data.subject,
-        topic: parsed.data.topic,
-        difficulty: parsed.data.difficulty,
-        numQuestions: parsed.data.numQuestions,
-        interests: child.interests,
-        theme: parsed.data.theme,
-        specialInstructions: parsed.data.specialInstructions,
-      },
-      user.id
-    );
+    // Run worksheet generation and theme image in parallel
+    const [generated, themeImageUrl] = await Promise.all([
+      generateWorksheet(
+        {
+          childName: child.name,
+          grade: child.grade,
+          subject: parsed.data.subject,
+          topic: parsed.data.topic,
+          difficulty: parsed.data.difficulty,
+          numQuestions: parsed.data.numQuestions,
+          interests: child.interests,
+          theme: parsed.data.theme,
+          specialInstructions: parsed.data.specialInstructions,
+        },
+        user.id
+      ),
+      parsed.data.theme ? getOrGenerateThemeImage(parsed.data.theme) : Promise.resolve(null),
+    ]);
 
     // Save worksheet to DB
     const { data: worksheet, error: saveError } = await supabase
@@ -113,6 +118,7 @@ export async function POST(request: NextRequest) {
         grade: child.grade,
         worksheet_type: parsed.data.dyslexia_mode ? "dyslexia" : "practice",
         theme: parsed.data.theme ?? null,
+        theme_image_url: themeImageUrl ?? null,
         content: generated.content,
         answer_key: generated.answer_key,
       })

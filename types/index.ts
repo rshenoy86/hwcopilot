@@ -40,6 +40,7 @@ export interface Worksheet {
   grade: Grade;
   worksheet_type: string;
   theme?: string | null;
+  theme_image_url?: string | null;
   content: WorksheetContent;
   answer_key: AnswerKeyItem[];
   created_at: string;
