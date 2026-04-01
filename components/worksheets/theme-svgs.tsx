@@ -688,6 +688,89 @@ export function PlaneSVG({ variant, className }: SvgProps) {
   );
 }
 
+// ── BASKETBALL (Sports) ───────────────────────────────────────────────────────
+const BBALL = [
+  { ball: "#FF6F00", stripe: "#1a1a1a", jersey: "#E53935", number: "#FFFFFF" },
+  { ball: "#FF8A65", stripe: "#1a1a1a", jersey: "#1E88E5", number: "#FFFFFF" },
+  { ball: "#FF6F00", stripe: "#1a1a1a", jersey: "#7B1FA2", number: "#FFD54F" },
+  { ball: "#FF7043", stripe: "#1a1a1a", jersey: "#2E7D32", number: "#FFFFFF" },
+  { ball: "#FF6F00", stripe: "#1a1a1a", jersey: "#F57F17", number: "#1a1a1a" },
+];
+
+export function BasketballSVG({ variant, className }: SvgProps) {
+  const c = BBALL[variant % BBALL.length];
+  return (
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* body / jersey */}
+      <rect x="32" y="62" width="56" height="50" rx="10" fill={c.jersey} stroke="#1a1a1a" strokeWidth="2" />
+      {/* jersey number */}
+      <text x="60" y="94" textAnchor="middle" fontSize="20" fontWeight="bold" fill={c.number} fontFamily="sans-serif">23</text>
+      {/* arms reaching up */}
+      <ellipse cx="18" cy="52" rx="12" ry="7" fill={c.jersey} stroke="#1a1a1a" strokeWidth="2" transform="rotate(-50 18 52)" />
+      <ellipse cx="102" cy="52" rx="12" ry="7" fill={c.jersey} stroke="#1a1a1a" strokeWidth="2" transform="rotate(50 102 52)" />
+      {/* hands */}
+      <circle cx="10" cy="40" r="8" fill="#FFCCBC" stroke="#1a1a1a" strokeWidth="1.5" />
+      <circle cx="110" cy="40" r="8" fill="#FFCCBC" stroke="#1a1a1a" strokeWidth="1.5" />
+      {/* neck */}
+      <rect x="50" y="54" width="20" height="12" rx="4" fill="#FFCCBC" />
+      {/* head */}
+      <circle cx="60" cy="40" r="22" fill="#FFCCBC" stroke="#1a1a1a" strokeWidth="2" />
+      {/* headband */}
+      <path d="M 38 34 Q 60 28 82 34" stroke={c.jersey} strokeWidth="5" fill="none" strokeLinecap="round" />
+      {/* eyes */}
+      <Eye cx={50} cy={38} r={7} irisColor={c.jersey} />
+      <Eye cx={70} cy={38} r={7} irisColor={c.jersey} />
+      {/* big smile */}
+      <Smile cx={60} cy={50} w={10} />
+      {/* basketball */}
+      <circle cx="96" cy="28" r="14" fill={c.ball} stroke={c.stripe} strokeWidth="1.5" />
+      <path d="M 82 28 Q 96 22 110 28" stroke={c.stripe} strokeWidth="1.5" fill="none" />
+      <path d="M 82 28 Q 96 34 110 28" stroke={c.stripe} strokeWidth="1.5" fill="none" />
+      <line x1="96" y1="14" x2="96" y2="42" stroke={c.stripe} strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+// ── STAR (generic fallback for any unrecognized custom theme) ─────────────────
+const STAR_COLORS = [
+  { body: "#FFD54F", shade: "#F57F17", iris: "#EF5350" },
+  { body: "#FF8A65", shade: "#BF360C", iris: "#5C6BC0" },
+  { body: "#AB47BC", shade: "#6A1B9A", iris: "#FFD54F" },
+  { body: "#42A5F5", shade: "#1565C0", iris: "#FF8A65" },
+  { body: "#66BB6A", shade: "#2E7D32", iris: "#FF5722" },
+];
+
+export function StarSVG({ variant, className }: SvgProps) {
+  const c = STAR_COLORS[variant % STAR_COLORS.length];
+  const pts = Array.from({ length: 5 }, (_, i) => {
+    const outer = ((i * 72 - 90) * Math.PI) / 180;
+    const inner = ((i * 72 - 90 + 36) * Math.PI) / 180;
+    return [
+      `${60 + 46 * Math.cos(outer)},${60 + 46 * Math.sin(outer)}`,
+      `${60 + 20 * Math.cos(inner)},${60 + 20 * Math.sin(inner)}`,
+    ];
+  }).flat().join(" ");
+  return (
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* star shape */}
+      <polygon points={pts} fill={c.body} stroke={c.shade} strokeWidth="2.5" strokeLinejoin="round" />
+      {/* shine */}
+      <polygon points={pts} fill="white" opacity="0.15" />
+      {/* face */}
+      <Eye cx={50} cy={56} r={7} irisColor={c.iris} />
+      <Eye cx={70} cy={56} r={7} irisColor={c.iris} />
+      <Smile cx={60} cy={68} w={9} />
+      {/* rosy cheeks */}
+      <circle cx="40" cy="66" r="5" fill="#FF8A65" opacity="0.35" />
+      <circle cx="80" cy="66" r="5" fill="#FF8A65" opacity="0.35" />
+      {/* sparkles */}
+      <circle cx="20" cy="20" r="3" fill={c.body} opacity="0.7" />
+      <circle cx="100" cy="18" r="2" fill={c.body} opacity="0.7" />
+      <circle cx="14" cy="90" r="2.5" fill={c.body} opacity="0.6" />
+    </svg>
+  );
+}
+
 // ── MASTER SELECTOR ───────────────────────────────────────────────────────────
 
 const SVG_MAP: Record<string, React.ComponentType<SvgProps>> = {
@@ -708,7 +791,33 @@ const SVG_MAP: Record<string, React.ComponentType<SvgProps>> = {
   music: MusicSVG,
   food: FoodSVG,
   travel: PlaneSVG,
+  sports: BasketballSVG,
 };
+
+// Keyword matching for custom themes typed by users
+function matchByKeyword(theme: string): React.ComponentType<SvgProps> | null {
+  const t = theme.toLowerCase();
+  if (/mario|luigi|bowser|yoshi|peach|nintendo|zelda|pokemon|pikachu|kirby/.test(t)) return ControllerSVG;
+  if (/basket|nba|football|soccer|baseball|sport|athlete|lebron|curry|dunk/.test(t)) return BasketballSVG;
+  if (/minecraft|roblox|fortnite|gamer|video game|playstation|xbox/.test(t)) return ControllerSVG;
+  if (/star wars|jedi|sith|galaxy|nasa|astronaut|alien|rocket/.test(t)) return RocketSVG;
+  if (/mermaid|shark|whale|dolphin|underwater|coral|fish/.test(t)) return FishSVG;
+  if (/cook|bak|cake|cookie|cupcake|chef|dessert/.test(t)) return CupcakeSVG;
+  if (/cat|dog|puppy|kitten|bunny|rabbit|hamster|guinea/.test(t)) return DogSVG;
+  if (/superhero|marvel|dc|spider|batman|avenger|captain|wonder woman/.test(t)) return HeroSVG;
+  if (/dino|t-rex|jurassic|raptor|prehistoric/.test(t)) return DinoSVG;
+  if (/music|song|sing|guitar|piano|drum|concert/.test(t)) return MusicSVG;
+  if (/draw|paint|color|craft|sketch|art/.test(t)) return ArtSVG;
+  if (/pizza|burger|taco|sushi|restaurant|snack/.test(t)) return FoodSVG;
+  if (/beach|surf|swim|pool|summer|tropical/.test(t)) return SunSVG;
+  if (/plane|fly|airport|vacation|trip|travel/.test(t)) return PlaneSVG;
+  if (/camp|hike|forest|mountain|outdoor/.test(t)) return TentSVG;
+  if (/butterfly|flower|garden|plant|bug|insect/.test(t)) return ButterflySVG;
+  if (/frog|toad|pond|tadpole/.test(t)) return FrogSVG;
+  if (/train|railroad|locomotive|subway/.test(t)) return TrainSVG;
+  if (/rainbow|unicorn|magic|fairy|color/.test(t)) return RainbowSVG;
+  return null;
+}
 
 export function ThemeSVG({
   theme,
@@ -720,9 +829,8 @@ export function ThemeSVG({
   className?: string;
 }) {
   if (!theme) return null;
+
   const key = theme.toLowerCase();
-  const Component = SVG_MAP[key];
-  if (!Component) return null;
 
   // Deterministic variant: stable per worksheet, different across worksheets
   const hash = worksheetId
@@ -730,5 +838,14 @@ export function ThemeSVG({
     .reduce((h, c) => (h * 31 + c.charCodeAt(0)) & 0xffff, 0);
   const variant = hash % 5;
 
-  return <Component variant={variant} className={className} />;
+  // 1. Exact preset match
+  const Exact = SVG_MAP[key];
+  if (Exact) return <Exact variant={variant} className={className} />;
+
+  // 2. Keyword match for custom themes (e.g. "Mario", "NBA", "Minecraft")
+  const Keyword = matchByKeyword(key);
+  if (Keyword) return <Keyword variant={variant} className={className} />;
+
+  // 3. Fallback: star character — always show something fun
+  return <StarSVG variant={variant} className={className} />;
 }
