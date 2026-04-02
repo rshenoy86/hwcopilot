@@ -122,7 +122,7 @@ export default function HomePage() {
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1.5 rounded-full mb-6">
                 <AlertTriangle className="h-3.5 w-3.5" />
-                STAAR Season 2025
+                STAAR Season 2026
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-6">
                 Do you know where your child{" "}

@@ -95,7 +95,7 @@ export default async function StaarHubPage() {
           <div className="flex items-center gap-2 mb-1">
             <h1 className="text-2xl font-bold">STAAR Prep</h1>
             <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-              2025 Season
+              2026 Season
             </span>
           </div>
           <p className="text-muted-foreground">
