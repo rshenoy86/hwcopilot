@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Home, Users, MessageCircle, CreditCard, LogOut, Menu, X, ClipboardList } from "lucide-react";
+import { BookOpen, Home, Users, MessageCircle, CreditCard, LogOut, Menu, X, ClipboardList, Target } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/worksheets/new", label: "New Worksheet", icon: BookOpen },
   { href: "/test-prep", label: "Test Prep", icon: ClipboardList },
+  { href: "/staar/new", label: "STAAR Prep", icon: Target, highlight: true },
   { href: "/children", label: "My Children", icon: Users },
   { href: "/homework-help", label: "Homework Help", icon: MessageCircle },
   { href: "/billing", label: "Plan & Billing", icon: CreditCard },
@@ -43,7 +44,7 @@ export default function DashboardNav({ profile, userEmail }: DashboardNavProps) 
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+              const isActive = pathname === item.href || pathname.startsWith(item.href.replace("/new", "") + "/") || pathname === item.href.replace("/new", "");
               return (
                 <Link
                   key={item.href}
@@ -52,6 +53,8 @@ export default function DashboardNav({ profile, userEmail }: DashboardNavProps) 
                     "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
                     isActive
                       ? "bg-primary text-primary-foreground"
+                      : item.highlight
+                      ? "text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                 >

@@ -5,8 +5,9 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Plus, MessageCircle, ArrowRight, Zap } from "lucide-react";
+import { BookOpen, Plus, MessageCircle, ArrowRight, Zap, Target, ChevronRight } from "lucide-react";
 import { formatDate, getResetDate } from "@/lib/utils";
+import { isStaarGrade } from "@/lib/staar-categories";
 import type { Child, Worksheet } from "@/types";
 import Mascot from "@/components/mascot";
 
@@ -135,6 +136,33 @@ export default async function DashboardPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* STAAR banner — shown if any child is in grades 3–8 */}
+      {children.some((c) => isStaarGrade(c.grade)) && (
+        <Link href="/staar/new">
+          <div className="rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white p-5 flex items-center justify-between gap-4 hover:opacity-95 transition-opacity cursor-pointer">
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-xl bg-amber-400/20 flex items-center justify-center shrink-0">
+                <Target className="h-5 w-5 text-amber-400" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-xs font-semibold text-amber-400 uppercase tracking-wide">
+                    STAAR Season
+                  </span>
+                </div>
+                <p className="font-semibold text-sm">
+                  Find out where {children.find((c) => isStaarGrade(c.grade))?.name} stands before STAAR
+                </p>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  10-minute assessment · Gap report · Targeted worksheets
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-5 w-5 text-slate-400 shrink-0" />
+          </div>
+        </Link>
+      )}
 
       {/* Quick actions */}
       <div>
