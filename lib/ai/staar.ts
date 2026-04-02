@@ -59,8 +59,11 @@ VISUAL AIDS — include a "visual" field on a question when the topic genuinely 
 - Fraction model: { "type": "fraction_model", "data": { "total_parts": 4, "shaded_parts": 3, "shape": "circle" } }
 - Shape: { "type": "shape", "data": { "shape": "rectangle", "width_label": "8 cm", "height_label": "5 cm" } }
 - Dot array: { "type": "dot_array", "data": { "rows": 3, "cols": 4 } }
+- Bar graph: { "type": "bar_graph", "data": { "title": "Goals Scored", "labels": ["Alex", "Maria", "Sam"], "values": [8, 4, 6], "y_label": "Goals" } }
+  Use for: data analysis questions that reference a bar graph. Maximum 6 bars.
 
 Only include a visual when it meaningfully helps answer the question. Most questions should have no visual.
+IMPORTANT: If a question says "the bar graph shows" or "the table shows" or references any visual, you MUST include the corresponding visual field. Never reference a visual in the question text without providing the data.
 
 IMPORTANT: The topic_tag must exactly match one of the 4 category names listed above.
 Do not include any text outside the JSON. Do not include markdown code fences.`;

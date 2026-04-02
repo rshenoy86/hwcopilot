@@ -86,7 +86,7 @@ export interface HomeworkHelpSession {
 }
 
 export interface TestVisual {
-  type: "clock" | "number_line" | "fraction_model" | "shape" | "dot_array";
+  type: "clock" | "number_line" | "fraction_model" | "shape" | "dot_array" | "bar_graph";
   data: Record<string, unknown>;
 }
 

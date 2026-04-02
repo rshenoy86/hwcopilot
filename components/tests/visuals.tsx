@@ -14,6 +14,8 @@ export function TestVisualRenderer({ visual }: { visual: TestVisual }) {
       return <ShapeVisual data={d} />;
     case "dot_array":
       return <DotArrayVisual data={d} />;
+    case "bar_graph":
+      return <BarGraphVisual data={d} />;
     default:
       return null;
   }
