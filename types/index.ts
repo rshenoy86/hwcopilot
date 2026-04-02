@@ -46,10 +46,16 @@ export interface Worksheet {
   created_at: string;
 }
 
+export interface WorksheetVisual {
+  type: "clock" | "ruler" | "beaker" | "number_line";
+  data: Record<string, unknown>;
+}
+
 export interface WorksheetContent {
   learn_it: string;
   worked_example: string;
   problems: string[];
+  problem_visuals?: (WorksheetVisual | null)[];
   challenge: string;
 }
 

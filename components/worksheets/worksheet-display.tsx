@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Printer, Plus, ArrowLeft, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { Child, Worksheet } from "@/types";
+import type { Child, Worksheet, WorksheetVisual } from "@/types";
+import { WorksheetVisualRenderer } from "@/components/tests/visuals";
 import { getThemeConfig } from "@/lib/theme-config";
 import { ThemeSVG } from "./theme-svgs";
 
@@ -268,11 +269,15 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
               )}
             </h2>
             <div className={problemSpacing}>
-              {worksheet.content.problems.map((problem, i) => (
+              {worksheet.content.problems.map((problem, i) => {
+                const visual: WorksheetVisual | null | undefined =
+                  worksheet.content.problem_visuals?.[i];
+                return (
                 <div key={i} className={isDyslexia ? "space-y-3" : "space-y-1"}>
                   <p className={`font-medium ${maxLineWidth}`}>
                     {i + 1}. <RenderBlock text={problem} className="inline" />
                   </p>
+                  {visual && <WorksheetVisualRenderer visual={visual} />}
                   {/* Answer lines */}
                   <div className={isDyslexia ? "space-y-3 mt-3" : isEarlyGrade ? "space-y-2 mt-2" : "mt-2"}>
                     {isDyslexia ? (
@@ -291,7 +296,8 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
                     )}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 

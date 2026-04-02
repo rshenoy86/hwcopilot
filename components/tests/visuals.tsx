@@ -1,4 +1,4 @@
-import type { TestVisual } from "@/types";
+import type { TestVisual, WorksheetVisual } from "@/types";
 
 export function TestVisualRenderer({ visual }: { visual: TestVisual }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -255,6 +255,130 @@ function ShapeVisual({ data }: { data: ShapeData }) {
   }
 
   return null;
+}
+
+// ─── Worksheet Visual Renderer ────────────────────────────────────────────────
+
+export function WorksheetVisualRenderer({ visual }: { visual: WorksheetVisual }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = visual.data as any;
+  switch (visual.type) {
+    case "clock":
+      return <ClockVisual data={d} />;
+    case "ruler":
+      return <RulerVisual data={d} />;
+    case "beaker":
+      return <BeakerVisual data={d} />;
+    case "number_line":
+      return <NumberLineVisual data={d} />;
+    default:
+      return null;
+  }
+}
+
+// ─── Ruler ────────────────────────────────────────────────────────────────────
+
+interface RulerData {
+  length_cm: number;
+  unit: "cm" | "in";
+}
+
+function RulerVisual({ data }: { data: RulerData }) {
+  const { length_cm, unit = "cm" } = data;
+  const numTicks = Math.min(Math.max(length_cm, 2), 20);
+  const tickSpacing = 24;
+  const W = numTicks * tickSpacing + 24;
+  const H = 54;
+  const rulerTop = 10;
+  const rulerH = 32;
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={W} height={H} aria-label={`Ruler showing ${numTicks} ${unit}`}>
+        {/* Ruler body */}
+        <rect x={4} y={rulerTop} width={W - 8} height={rulerH} fill="#fef9c3" stroke="#ca8a04" strokeWidth="1.5" rx="2" />
+        {/* Tick marks and labels */}
+        {Array.from({ length: numTicks + 1 }, (_, i) => {
+          const x = 4 + i * tickSpacing;
+          const isMajor = true; // every mark is labeled for a ruler
+          return (
+            <g key={i}>
+              <line x1={x} y1={rulerTop} x2={x} y2={rulerTop + (isMajor ? 14 : 8)} stroke="#92400e" strokeWidth={isMajor ? 1.5 : 1} />
+              {isMajor && (
+                <text x={x} y={rulerTop + 26} textAnchor="middle" fontSize="9" fontFamily="sans-serif" fill="#78350f">
+                  {i}
+                </text>
+              )}
+              {/* half-tick */}
+              {i < numTicks && (
+                <line x1={x + tickSpacing / 2} y1={rulerTop} x2={x + tickSpacing / 2} y2={rulerTop + 8} stroke="#92400e" strokeWidth="1" />
+              )}
+            </g>
+          );
+        })}
+        {/* Unit label */}
+        <text x={W / 2} y={rulerTop + rulerH - 4} textAnchor="middle" fontSize="8" fontFamily="sans-serif" fill="#92400e" opacity="0.7">
+          {unit}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+// ─── Beaker ───────────────────────────────────────────────────────────────────
+
+interface BeakerData {
+  capacity: number;
+  filled: number;
+  unit: string;
+}
+
+function BeakerVisual({ data }: { data: BeakerData }) {
+  const { capacity, filled, unit = "mL" } = data;
+  const clampedFilled = Math.min(Math.max(filled, 0), capacity);
+  const fillRatio = capacity > 0 ? clampedFilled / capacity : 0;
+
+  const W = 70, beakerTop = 10, beakerH = 100, beakerW = 50, beakerX = 10;
+  const totalH = beakerTop + beakerH + 24;
+  const fillH = beakerH * fillRatio;
+  const fillY = beakerTop + beakerH - fillH;
+
+  // Graduation marks (4 evenly spaced)
+  const numGrads = 4;
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={W + 30} height={totalH} aria-label={`Beaker with ${clampedFilled} ${unit} of ${capacity} ${unit}`}>
+        {/* Liquid fill */}
+        <rect x={beakerX} y={fillY} width={beakerW} height={fillH} fill="#bfdbfe" />
+        {/* Beaker outline — open top */}
+        <path
+          d={`M${beakerX},${beakerTop} L${beakerX},${beakerTop + beakerH} L${beakerX + beakerW},${beakerTop + beakerH} L${beakerX + beakerW},${beakerTop}`}
+          fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinejoin="round"
+        />
+        {/* Spout at top */}
+        <line x1={beakerX - 6} y1={beakerTop} x2={beakerX + beakerW + 6} y2={beakerTop} stroke="#1d4ed8" strokeWidth="2.5" />
+        {/* Graduation lines and labels */}
+        {Array.from({ length: numGrads }, (_, i) => {
+          const gradFraction = (i + 1) / numGrads;
+          const gradY = beakerTop + beakerH - beakerH * gradFraction;
+          const gradValue = Math.round(capacity * gradFraction);
+          return (
+            <g key={i}>
+              <line x1={beakerX + beakerW} y1={gradY} x2={beakerX + beakerW + 8} y2={gradY} stroke="#1d4ed8" strokeWidth="1" />
+              <text x={beakerX + beakerW + 10} y={gradY + 3} fontSize="8" fontFamily="sans-serif" fill="#1d4ed8">
+                {gradValue}
+              </text>
+            </g>
+          );
+        })}
+        {/* Unit label */}
+        <text x={beakerX + beakerW / 2} y={beakerTop + beakerH + 14} textAnchor="middle" fontSize="9" fontFamily="sans-serif" fill="#1d4ed8">
+          {unit}
+        </text>
+      </svg>
+    </div>
+  );
 }
 
 // ─── Dot Array ────────────────────────────────────────────────────────────────
