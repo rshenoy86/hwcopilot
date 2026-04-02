@@ -117,7 +117,7 @@ export default function HomePage() {
       <section className="py-24 px-4">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold">Three ways GuruBuddy has your back</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold">Three ways GuruBuddy supports your child</h2>
             <p className="text-muted-foreground mt-3 text-lg max-w-xl mx-auto">
               Whether it&apos;s daily practice, test prep, or a homework question at 9pm, GuruBuddy is ready.
             </p>
