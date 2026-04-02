@@ -139,7 +139,7 @@ export default async function DashboardPage() {
 
       {/* STAAR banner — shown if any child is in grades 3–8 */}
       {children.some((c) => isStaarGrade(c.grade)) && (
-        <Link href="/staar/new">
+        <Link href="/staar">
           <div className="rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white p-5 flex items-center justify-between gap-4 hover:opacity-95 transition-opacity cursor-pointer">
             <div className="flex items-center gap-4">
               <div className="h-10 w-10 rounded-xl bg-amber-400/20 flex items-center justify-center shrink-0">

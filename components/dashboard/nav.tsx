@@ -20,7 +20,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/worksheets/new", label: "New Worksheet", icon: BookOpen },
   { href: "/test-prep", label: "Test Prep", icon: ClipboardList },
-  { href: "/staar/new", label: "STAAR Prep", icon: Target, highlight: true },
+  { href: "/staar", label: "STAAR Prep", icon: Target, highlight: true },
   { href: "/children", label: "My Children", icon: Users },
   { href: "/homework-help", label: "Homework Help", icon: MessageCircle },
   { href: "/billing", label: "Plan & Billing", icon: CreditCard },

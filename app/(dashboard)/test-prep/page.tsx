@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ClipboardList, Plus, ArrowRight, Zap } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { STAAR_TOPIC, STAAR_PRACTICE_TOPIC } from "@/lib/staar-categories";
 import type { Test, Profile } from "@/types";
 
 const FREE_LIMIT = 1;
@@ -23,6 +24,8 @@ export default async function TestPrepPage() {
       .from("tests")
       .select("*, children(name)")
       .eq("user_id", user.id)
+      .neq("topic", STAAR_TOPIC)
+      .neq("topic", STAAR_PRACTICE_TOPIC)
       .order("created_at", { ascending: false }),
   ]);
 

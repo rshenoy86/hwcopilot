@@ -82,3 +82,4 @@ export function getMastery(pct: number): {
 }
 
 export const STAAR_TOPIC = "STAAR Math Readiness";
+export const STAAR_PRACTICE_TOPIC = "STAAR Math Practice";

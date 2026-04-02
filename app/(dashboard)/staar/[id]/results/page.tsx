@@ -202,12 +202,12 @@ export default async function StaarResultsPage({ params }: PageProps) {
       <div className="flex flex-col sm:flex-row gap-3">
         <Link href="/staar/new" className="flex-1">
           <Button variant="outline" className="w-full">
-            Retake Assessment
+            Retake Readiness Check
           </Button>
         </Link>
-        <Link href="/dashboard" className="flex-1">
+        <Link href="/staar" className="flex-1">
           <Button variant="ghost" className="w-full">
-            Back to Dashboard
+            STAAR Prep Hub
           </Button>
         </Link>
       </div>
