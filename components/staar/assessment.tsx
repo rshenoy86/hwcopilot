@@ -124,7 +124,7 @@ export default function StaarAssessment({ test, child }: StaarAssessmentProps) {
                 key={option}
                 onClick={() => selectAnswer(letter)}
                 className={cn(
-                  "w-full text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all",
+                  "w-full text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-colors duration-75",
                   isSelected
                     ? "border-primary bg-primary/5 text-primary"
                     : "border-border hover:border-primary/40 hover:bg-slate-50 text-foreground"
