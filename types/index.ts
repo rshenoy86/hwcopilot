@@ -47,7 +47,17 @@ export interface Worksheet {
 }
 
 export interface WorksheetVisual {
-  type: "clock" | "ruler" | "beaker" | "number_line";
+  type:
+    | "clock"
+    | "ruler"
+    | "beaker"
+    | "number_line"
+    | "thermometer"
+    | "balance_scale"
+    | "coins"
+    | "calendar"
+    | "protractor"
+    | "bar_graph";
   data: Record<string, unknown>;
 }
 
@@ -56,6 +66,7 @@ export interface WorksheetContent {
   worked_example: string;
   problems: string[];
   problem_visuals?: (WorksheetVisual | null)[];
+  problem_icons?: (string | null)[];
   challenge: string;
 }
 

@@ -272,10 +272,16 @@ export default function WorksheetDisplay({ worksheet, child }: WorksheetDisplayP
               {worksheet.content.problems.map((problem, i) => {
                 const visual: WorksheetVisual | null | undefined =
                   worksheet.content.problem_visuals?.[i];
+                const icon: string | null | undefined =
+                  worksheet.content.problem_icons?.[i];
                 return (
                 <div key={i} className={isDyslexia ? "space-y-3" : "space-y-1"}>
-                  <p className={`font-medium ${maxLineWidth}`}>
-                    {i + 1}. <RenderBlock text={problem} className="inline" />
+                  <p className={`font-medium ${maxLineWidth} flex items-start gap-2`}>
+                    <span className="shrink-0">{i + 1}.</span>
+                    {icon && (
+                      <span className="shrink-0 text-base leading-snug" aria-hidden="true">{icon}</span>
+                    )}
+                    <RenderBlock text={problem} className="inline" />
                   </p>
                   {visual && <WorksheetVisualRenderer visual={visual} />}
                   {/* Answer lines */}

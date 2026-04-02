@@ -51,26 +51,49 @@ Always respond with valid JSON matching this exact structure:
   "worked_example": "One fully solved example with clear step-by-step reasoning",
   "problems": ["problem 1 text", "problem 2 text"],
   "problem_visuals": [null, {"type": "clock", "data": {"hours": 3, "minutes": 15}}],
+  "problem_icons": ["⚾", null],
   "challenge": "One harder extension problem",
   "answer_key": [
     {"number": 1, "answer": "...", "explanation": "brief explanation if non-obvious"}
   ]
 }
 
-INLINE VISUALS — "problem_visuals" must be an array with exactly one entry per problem (same length as "problems"). Each entry is either null or one of these visual objects:
-- Clock (for time-telling/elapsed time): {"type": "clock", "data": {"hours": H, "minutes": M}}
-- Ruler (for length/distance measurement): {"type": "ruler", "data": {"length_cm": N, "unit": "cm"}} — use unit "in" for inches
-- Beaker (for liquid volume/capacity, ml↔L, cups): {"type": "beaker", "data": {"capacity": N, "filled": F, "unit": "mL"}} — unit can be "mL", "L", or "cups"
-- Number line (for rounding, counting on, comparing): {"type": "number_line", "data": {"min": N, "max": M, "marked": [X]}}
+INLINE VISUALS — "problem_visuals" must be an array with exactly one entry per problem (same length as "problems"). Each entry is null or one of these visual objects. Pick the most helpful one — never include a visual when the problem text already makes it fully clear:
 
-Rules for visuals:
-- Include a visual ONLY when it meaningfully helps the student understand or set up the problem
-- Time problems (what time does the clock show, elapsed time): always include a clock
-- Measurement problems involving a specific length or object to measure: include a ruler
-- Liquid volume problems (how much is in the beaker, convert mL to L): include a beaker
-- Rounding or number-line problems: include a number_line
-- Word problems, computation, fractions, geometry: use null
-- Never include a visual for the same problem that already has full visual context in the text alone
+- Clock → {"type":"clock","data":{"hours":H,"minutes":M}}
+  USE FOR: time-telling, reading a clock face, elapsed time problems
+
+- Ruler → {"type":"ruler","data":{"length_cm":N,"unit":"cm"}}
+  USE FOR: measuring length or distance; set length_cm to the object being measured; unit "in" for inches
+
+- Beaker → {"type":"beaker","data":{"capacity":N,"filled":F,"unit":"mL"}}
+  USE FOR: liquid volume, capacity, mL↔L conversions, cups/pints/quarts; unit can be "mL","L","cups","pints","qt"
+
+- Thermometer → {"type":"thermometer","data":{"temperature":T,"min":LO,"max":HI,"unit":"F"}}
+  USE FOR: reading temperatures, comparing temperatures, temperature word problems; unit "C" for Celsius
+
+- Balance scale → {"type":"balance_scale","data":{"left_weight":L,"right_weight":R,"unit":"g"}}
+  USE FOR: weight/mass comparison, which is heavier, balancing equations with weights; unit can be "g","kg","lb","oz"
+
+- Coins → {"type":"coins","data":{"quarters":Q,"dimes":D,"nickels":N,"pennies":P}}
+  USE FOR: counting money, making change, coin combinations; keep total coins ≤ 10
+
+- Calendar → {"type":"calendar","data":{"month":"March","year":2025,"start_day":6,"num_days":31,"highlighted_days":[5,12,19]}}
+  USE FOR: counting days/weeks, elapsed days, days-of-week problems; start_day: 0=Sun,1=Mon,...,6=Sat
+
+- Protractor → {"type":"protractor","data":{"angle":N}}
+  USE FOR: measuring or identifying angles (N = degrees, 1–179)
+
+- Bar graph → {"type":"bar_graph","data":{"labels":["Mon","Tue"],"values":[3,5],"title":"Books Read","y_label":"Books"}}
+  USE FOR: reading data from a chart, interpreting graphs, data/statistics problems; max 6 bars
+
+- Number line → {"type":"number_line","data":{"min":N,"max":M,"marked":[X]}}
+  USE FOR: rounding, counting on/back, ordering numbers, number patterns
+
+WORD PROBLEM ICONS — "problem_icons" must be an array with exactly one entry per problem (same length as "problems"). Each entry is null or a single emoji that represents the theme/character/object in that word problem:
+- Word problems with a clear subject: provide 1 emoji (e.g. "⚾" baseball, "🦕" dinosaurs, "🚀" space, "🐶" dogs, "🍕" pizza, "🌊" ocean, "🏀" basketball, "🎸" music, "🌮" tacos, "🦋" butterflies)
+- Pure computation, abstract math, or measurement-only problems: null
+- Only use 1 emoji per problem; choose the most specific one for that problem's story
 
 Do not include any text outside the JSON. Do not include markdown code fences.`;
 }
@@ -157,7 +180,7 @@ export async function generateWorksheet(
     throw new Error("Unexpected response type from AI");
   }
 
-  let parsed: { learn_it: string; worked_example: string; problems: string[]; problem_visuals?: (WorksheetVisual | null)[]; challenge: string; answer_key: AnswerKeyItem[] };
+  let parsed: { learn_it: string; worked_example: string; problems: string[]; problem_visuals?: (WorksheetVisual | null)[]; problem_icons?: (string | null)[]; challenge: string; answer_key: AnswerKeyItem[] };
   try {
     parsed = JSON.parse(content.text);
   } catch {
@@ -175,6 +198,7 @@ export async function generateWorksheet(
       worked_example: parsed.worked_example,
       problems: parsed.problems,
       problem_visuals: Array.isArray(parsed.problem_visuals) ? parsed.problem_visuals : undefined,
+      problem_icons: Array.isArray(parsed.problem_icons) ? parsed.problem_icons : undefined,
       challenge: parsed.challenge,
     },
     answer_key: parsed.answer_key,

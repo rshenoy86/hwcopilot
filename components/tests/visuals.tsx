@@ -271,6 +271,18 @@ export function WorksheetVisualRenderer({ visual }: { visual: WorksheetVisual })
       return <BeakerVisual data={d} />;
     case "number_line":
       return <NumberLineVisual data={d} />;
+    case "thermometer":
+      return <ThermometerVisual data={d} />;
+    case "balance_scale":
+      return <BalanceScaleVisual data={d} />;
+    case "coins":
+      return <CoinsVisual data={d} />;
+    case "calendar":
+      return <CalendarVisual data={d} />;
+    case "protractor":
+      return <ProtractorVisual data={d} />;
+    case "bar_graph":
+      return <BarGraphVisual data={d} />;
     default:
       return null;
   }
@@ -405,6 +417,382 @@ function DotArrayVisual({ data }: { data: DotArrayData }) {
               r={r} fill="#1a1a1a" />
           ))
         )}
+      </svg>
+    </div>
+  );
+}
+
+// ─── Thermometer ──────────────────────────────────────────────────────────────
+
+interface ThermometerData {
+  temperature: number;
+  min: number;
+  max: number;
+  unit: "F" | "C";
+}
+
+function ThermometerVisual({ data }: { data: ThermometerData }) {
+  const { temperature, min, max, unit = "F" } = data;
+  const range = max - min || 1;
+  const fillRatio = Math.min(Math.max((temperature - min) / range, 0), 1);
+
+  const tubeX = 40, tubeW = 14, tubeTop = 12, tubeH = 110;
+  const bulbR = 12, bulbCY = tubeTop + tubeH + bulbR - 2;
+  const totalW = 100, totalH = bulbCY + bulbR + 8;
+
+  const fillH = tubeH * fillRatio;
+  const fillY = tubeTop + tubeH - fillH;
+
+  // Tick marks every 25% of range
+  const numTicks = 4;
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={totalW} height={totalH} aria-label={`Thermometer showing ${temperature}°${unit}`}>
+        {/* Tube background */}
+        <rect x={tubeX} y={tubeTop} width={tubeW} height={tubeH} rx={tubeW / 2} fill="white" stroke="#dc2626" strokeWidth="1.5" />
+        {/* Mercury fill */}
+        <rect x={tubeX + 2} y={fillY} width={tubeW - 4} height={fillH + bulbR} rx={(tubeW - 4) / 2} fill="#dc2626" />
+        {/* Bulb */}
+        <circle cx={tubeX + tubeW / 2} cy={bulbCY} r={bulbR} fill="#dc2626" stroke="#dc2626" strokeWidth="1" />
+        <circle cx={tubeX + tubeW / 2} cy={bulbCY} r={bulbR} fill="none" stroke="#991b1b" strokeWidth="1.5" />
+        {/* Tick marks and labels */}
+        {Array.from({ length: numTicks + 1 }, (_, i) => {
+          const tickRatio = i / numTicks;
+          const tickY = tubeTop + tubeH - tubeH * tickRatio;
+          const tickValue = Math.round(min + range * tickRatio);
+          return (
+            <g key={i}>
+              <line x1={tubeX + tubeW} y1={tickY} x2={tubeX + tubeW + 8} y2={tickY} stroke="#6b7280" strokeWidth="1" />
+              <text x={tubeX + tubeW + 11} y={tickY + 3.5} fontSize="8" fontFamily="sans-serif" fill="#374151">
+                {tickValue}°
+              </text>
+            </g>
+          );
+        })}
+        {/* Unit label */}
+        <text x={tubeX - 4} y={tubeTop - 3} fontSize="9" fontFamily="sans-serif" fill="#dc2626" textAnchor="middle">
+          °{unit}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+// ─── Balance Scale ─────────────────────────────────────────────────────────────
+
+interface BalanceScaleData {
+  left_weight: number;
+  right_weight: number;
+  unit: string;
+}
+
+function BalanceScaleVisual({ data }: { data: BalanceScaleData }) {
+  const { left_weight, right_weight, unit = "g" } = data;
+  const W = 200, H = 130;
+  const cx = W / 2, baseY = H - 10;
+  const beamY = 48;
+  const armLen = 72;
+  const panR = 20;
+  const ropeLen = 22;
+
+  // Tilt beam based on weight difference
+  const diff = left_weight - right_weight;
+  const maxDiff = Math.max(Math.abs(diff), 1);
+  const tiltDeg = Math.min((diff / maxDiff) * 12, 12);
+  const tiltRad = (tiltDeg * Math.PI) / 180;
+
+  const leftEnd = { x: cx - armLen * Math.cos(tiltRad), y: beamY - armLen * Math.sin(tiltRad) };
+  const rightEnd = { x: cx + armLen * Math.cos(tiltRad), y: beamY + armLen * Math.sin(tiltRad) };
+  const leftPanCY = leftEnd.y + ropeLen + panR;
+  const rightPanCY = rightEnd.y + ropeLen + panR;
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={W} height={H} aria-label={`Balance scale: ${left_weight}${unit} vs ${right_weight}${unit}`}>
+        {/* Stand */}
+        <line x1={cx} y1={beamY} x2={cx} y2={baseY} stroke="#78350f" strokeWidth="3" />
+        <ellipse cx={cx} cy={baseY} rx={28} ry={6} fill="#92400e" />
+        {/* Beam */}
+        <line x1={leftEnd.x} y1={leftEnd.y} x2={rightEnd.x} y2={rightEnd.y} stroke="#78350f" strokeWidth="3" strokeLinecap="round" />
+        {/* Pivot */}
+        <circle cx={cx} cy={beamY} r={5} fill="#451a03" />
+        {/* Left rope + pan */}
+        <line x1={leftEnd.x} y1={leftEnd.y} x2={leftEnd.x} y2={leftEnd.y + ropeLen} stroke="#78350f" strokeWidth="1.5" />
+        <ellipse cx={leftEnd.x} cy={leftEnd.y + ropeLen + panR} rx={panR} ry={6} fill="#d97706" stroke="#92400e" strokeWidth="1.5" />
+        <text x={leftEnd.x} y={leftPanCY + 3} textAnchor="middle" fontSize="9" fontFamily="sans-serif" fontWeight="bold" fill="#1a1a1a">
+          {left_weight}{unit}
+        </text>
+        {/* Right rope + pan */}
+        <line x1={rightEnd.x} y1={rightEnd.y} x2={rightEnd.x} y2={rightEnd.y + ropeLen} stroke="#78350f" strokeWidth="1.5" />
+        <ellipse cx={rightEnd.x} cy={rightEnd.y + ropeLen + panR} rx={panR} ry={6} fill="#d97706" stroke="#92400e" strokeWidth="1.5" />
+        <text x={rightEnd.x} y={rightPanCY + 3} textAnchor="middle" fontSize="9" fontFamily="sans-serif" fontWeight="bold" fill="#1a1a1a">
+          {right_weight}{unit}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+// ─── Coins ────────────────────────────────────────────────────────────────────
+
+interface CoinsData {
+  quarters: number;
+  dimes: number;
+  nickels: number;
+  pennies: number;
+}
+
+const COIN_DEFS = [
+  { key: "quarters" as const, label: "Q", value: "25¢", r: 15, fill: "#d4af37", stroke: "#a67c00" },
+  { key: "dimes"    as const, label: "D", value: "10¢", r: 11, fill: "#c0c0c0", stroke: "#808080" },
+  { key: "nickels"  as const, label: "N", value: "5¢",  r: 13, fill: "#b8b8b8", stroke: "#888"    },
+  { key: "pennies"  as const, label: "P", value: "1¢",  r: 11, fill: "#b87333", stroke: "#7a4f2e" },
+];
+
+function CoinsVisual({ data }: { data: CoinsData }) {
+  // Build flat list of coins to draw, capped at 12 total
+  const coins: { r: number; fill: string; stroke: string; label: string }[] = [];
+  for (const def of COIN_DEFS) {
+    const count = Math.min(Math.max(data[def.key] || 0, 0), 12);
+    for (let i = 0; i < count && coins.length < 12; i++) {
+      coins.push({ r: def.r, fill: def.fill, stroke: def.stroke, label: def.label });
+    }
+  }
+
+  if (coins.length === 0) return null;
+
+  // Layout in rows of 6
+  const colCount = Math.min(coins.length, 6);
+  const rowCount = Math.ceil(coins.length / 6);
+  const maxR = 15;
+  const sp = maxR * 2 + 6;
+  const pad = maxR + 4;
+  const W = colCount * sp + pad;
+  const H = rowCount * sp + pad;
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={W} height={H} aria-label="Coins">
+        {coins.map((c, i) => {
+          const col = i % 6;
+          const row = Math.floor(i / 6);
+          const cx = pad / 2 + col * sp + maxR;
+          const cy = pad / 2 + row * sp + maxR;
+          return (
+            <g key={i}>
+              <circle cx={cx} cy={cy} r={c.r} fill={c.fill} stroke={c.stroke} strokeWidth="1.5" />
+              <text x={cx} y={cy + 3.5} textAnchor="middle" fontSize="8" fontWeight="bold" fontFamily="sans-serif" fill="white">
+                {c.label}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ─── Calendar ─────────────────────────────────────────────────────────────────
+
+interface CalendarData {
+  month: string;
+  year: number;
+  start_day: number; // 0=Sun, 1=Mon, ..., 6=Sat
+  num_days: number;
+  highlighted_days?: number[];
+}
+
+function CalendarVisual({ data }: { data: CalendarData }) {
+  const { month, year, start_day, num_days, highlighted_days = [] } = data;
+  const days = ["S", "M", "T", "W", "T", "F", "S"];
+  const cellW = 26, cellH = 22, padX = 6, padY = 6;
+  const headerH = 22, dayRowH = 18;
+  const W = 7 * cellW + padX * 2;
+
+  // Build grid of dates
+  const cells: { day: number | null; col: number; row: number }[] = [];
+  for (let col = 0; col < start_day; col++) cells.push({ day: null, col, row: 0 });
+  for (let d = 1; d <= num_days; d++) {
+    const idx = start_day + d - 1;
+    cells.push({ day: d, col: idx % 7, row: Math.floor(idx / 7) });
+  }
+  const numRows = Math.ceil((start_day + num_days) / 7);
+  const H = padY + headerH + dayRowH + numRows * cellH + padY;
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={W} height={H} aria-label={`${month} ${year} calendar`}>
+        {/* Header */}
+        <rect x={0} y={0} width={W} height={headerH} fill="#3b82f6" rx="4" />
+        <text x={W / 2} y={headerH / 2 + 4} textAnchor="middle" fontSize="10" fontWeight="bold" fontFamily="sans-serif" fill="white">
+          {month} {year}
+        </text>
+        {/* Day names */}
+        {days.map((d, i) => (
+          <text key={i} x={padX + i * cellW + cellW / 2} y={headerH + dayRowH - 4}
+            textAnchor="middle" fontSize="8" fontFamily="sans-serif" fill="#6b7280" fontWeight="bold">
+            {d}
+          </text>
+        ))}
+        {/* Date cells */}
+        {cells.map((c, i) => {
+          if (c.day === null) return null;
+          const x = padX + c.col * cellW;
+          const y = padY + headerH + dayRowH + c.row * cellH;
+          const highlighted = highlighted_days.includes(c.day);
+          return (
+            <g key={i}>
+              {highlighted && <circle cx={x + cellW / 2} cy={y + cellH / 2} r={9} fill="#3b82f6" />}
+              <text x={x + cellW / 2} y={y + cellH / 2 + 3.5} textAnchor="middle"
+                fontSize="9" fontFamily="sans-serif"
+                fill={highlighted ? "white" : "#1a1a1a"} fontWeight={highlighted ? "bold" : "normal"}>
+                {c.day}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ─── Protractor ───────────────────────────────────────────────────────────────
+
+interface ProtractorData {
+  angle: number;
+}
+
+function ProtractorVisual({ data }: { data: ProtractorData }) {
+  const { angle } = data;
+  const cx = 100, cy = 90, r = 80;
+  const W = 200, H = 100;
+
+  // Angle arm endpoint (from right baseline, counter-clockwise in SVG coords)
+  const rad = ((180 - angle) * Math.PI) / 180;
+  const armX = cx + r * Math.cos(rad);
+  const armY = cy - r * Math.sin(rad);
+
+  const majorTicks = [0, 30, 60, 90, 120, 150, 180];
+  const minorTicks = Array.from({ length: 19 }, (_, i) => i * 10);
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={W} height={H} aria-label={`Protractor showing ${angle} degrees`}>
+        {/* Protractor semicircle */}
+        <path d={`M${cx - r},${cy} A${r},${r} 0 0 1 ${cx + r},${cy} Z`}
+          fill="#fef9c3" stroke="#ca8a04" strokeWidth="1.5" />
+        {/* Baseline */}
+        <line x1={cx - r} y1={cy} x2={cx + r} y2={cy} stroke="#ca8a04" strokeWidth="1.5" />
+        {/* Minor ticks */}
+        {minorTicks.map((deg) => {
+          const a = ((180 - deg) * Math.PI) / 180;
+          const inner = r - 6;
+          return (
+            <line key={deg}
+              x1={cx + inner * Math.cos(a)} y1={cy - inner * Math.sin(a)}
+              x2={cx + r * Math.cos(a)} y2={cy - r * Math.sin(a)}
+              stroke="#ca8a04" strokeWidth="0.8" />
+          );
+        })}
+        {/* Major ticks and labels */}
+        {majorTicks.map((deg) => {
+          const a = ((180 - deg) * Math.PI) / 180;
+          const inner = r - 12;
+          const labelR = r - 20;
+          return (
+            <g key={deg}>
+              <line x1={cx + inner * Math.cos(a)} y1={cy - inner * Math.sin(a)}
+                x2={cx + r * Math.cos(a)} y2={cy - r * Math.sin(a)}
+                stroke="#92400e" strokeWidth="1.5" />
+              <text x={cx + labelR * Math.cos(a)} y={cy - labelR * Math.sin(a) + 3.5}
+                textAnchor="middle" fontSize="8" fontFamily="sans-serif" fill="#78350f">
+                {deg}
+              </text>
+            </g>
+          );
+        })}
+        {/* Center dot */}
+        <circle cx={cx} cy={cy} r={3} fill="#dc2626" />
+        {/* Angle arm */}
+        <line x1={cx} y1={cy} x2={armX} y2={armY} stroke="#dc2626" strokeWidth="2" strokeLinecap="round" />
+        {/* Base arm */}
+        <line x1={cx} y1={cy} x2={cx + r} y2={cy} stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" />
+        {/* Angle label */}
+        <text x={cx} y={cy - 12} textAnchor="middle" fontSize="10" fontFamily="sans-serif" fontWeight="bold" fill="#dc2626">
+          {angle}°
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+// ─── Bar Graph ────────────────────────────────────────────────────────────────
+
+interface BarGraphData {
+  labels: string[];
+  values: number[];
+  title?: string;
+  y_label?: string;
+}
+
+function BarGraphVisual({ data }: { data: BarGraphData }) {
+  const { labels, values, title, y_label } = data;
+  const bars = Math.min(labels.length, values.length, 6);
+  const maxVal = Math.max(...values.slice(0, bars), 1);
+
+  const padL = 32, padR = 10, padTop = title ? 24 : 10, padBot = 28;
+  const barAreaW = 180, barAreaH = 90;
+  const W = padL + barAreaW + padR;
+  const H = padTop + barAreaH + padBot;
+  const barW = Math.floor((barAreaW - 4) / bars) - 4;
+  const colors = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg width={W} height={H} aria-label={title || "Bar graph"}>
+        {/* Title */}
+        {title && (
+          <text x={padL + barAreaW / 2} y={14} textAnchor="middle" fontSize="9" fontWeight="bold" fontFamily="sans-serif" fill="#1a1a1a">
+            {title}
+          </text>
+        )}
+        {/* Y-axis */}
+        <line x1={padL} y1={padTop} x2={padL} y2={padTop + barAreaH} stroke="#9ca3af" strokeWidth="1.5" />
+        {/* X-axis */}
+        <line x1={padL} y1={padTop + barAreaH} x2={padL + barAreaW} y2={padTop + barAreaH} stroke="#9ca3af" strokeWidth="1.5" />
+        {/* Y-axis ticks */}
+        {[0, 0.25, 0.5, 0.75, 1].map((frac) => {
+          const y = padTop + barAreaH - barAreaH * frac;
+          const val = Math.round(maxVal * frac);
+          return (
+            <g key={frac}>
+              <line x1={padL - 4} y1={y} x2={padL} y2={y} stroke="#9ca3af" strokeWidth="1" />
+              <text x={padL - 6} y={y + 3.5} textAnchor="end" fontSize="7" fontFamily="sans-serif" fill="#6b7280">{val}</text>
+            </g>
+          );
+        })}
+        {/* Y-axis label */}
+        {y_label && (
+          <text x={10} y={padTop + barAreaH / 2} textAnchor="middle" fontSize="8" fontFamily="sans-serif" fill="#6b7280"
+            transform={`rotate(-90, 10, ${padTop + barAreaH / 2})`}>
+            {y_label}
+          </text>
+        )}
+        {/* Bars */}
+        {Array.from({ length: bars }, (_, i) => {
+          const barH = (values[i] / maxVal) * barAreaH;
+          const x = padL + 4 + i * (barW + 4);
+          const y = padTop + barAreaH - barH;
+          return (
+            <g key={i}>
+              <rect x={x} y={y} width={barW} height={barH} fill={colors[i % colors.length]} rx="2" />
+              <text x={x + barW / 2} y={padTop + barAreaH + 12} textAnchor="middle" fontSize="8" fontFamily="sans-serif" fill="#374151">
+                {labels[i]}
+              </text>
+            </g>
+          );
+        })}
       </svg>
     </div>
   );
