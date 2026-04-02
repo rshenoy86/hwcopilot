@@ -216,100 +216,104 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* STAAR Pro features */}
-      <section className="py-20 px-4 bg-slate-50 border-b border-slate-100">
+      {/* STAAR Pro features — continues the dark STAAR section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-indigo-950 to-slate-900 text-white">
         <div className="container mx-auto max-w-5xl">
 
-          {/* Free vs Pro comparison strip */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-14 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Free — no credit card needed</p>
-              <ul className="space-y-2">
-                {[
-                  "STAAR Readiness Check (12 questions)",
-                  "Full gap report by reporting category",
-                  "Works for grades 3–8, all STAAR subjects",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-sm text-slate-700">
-                    <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="sm:border-l sm:border-slate-100 sm:pl-6">
-              <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-3">Pro — $12/month</p>
-              <ul className="space-y-2">
-                {[
-                  "STAAR Practice Tests (full graded tests)",
-                  "Targeted worksheets for every gap",
-                  "Progress tracking across assessments",
-                  "250 worksheets + 10 test preps/month",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-sm text-slate-700">
-                    <CheckCircle className="h-4 w-4 text-primary shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          {/* Divider */}
+          <div className="border-t border-white/10 mb-14" />
 
-          {/* 3 Pro feature cards */}
+          {/* Headline */}
           <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl font-bold">From finding gaps to closing them</h2>
-            <p className="text-muted-foreground mt-3 text-lg max-w-xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">From finding gaps to closing them</h2>
+            <p className="text-slate-400 mt-3 text-lg max-w-xl mx-auto">
               The readiness check shows you where your child stands. Pro gives you everything to actually do something about it.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* 3 Pro feature cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
             {[
               {
                 icon: ClipboardList,
-                gradient: "from-indigo-500 to-violet-600",
-                shadow: "shadow-indigo-100",
+                iconBg: "bg-indigo-500/20",
+                iconColor: "text-indigo-300",
                 title: "Full STAAR Practice Tests",
-                description: "Not just one topic — a complete practice test spanning all 4 STAAR reporting categories at your child's grade level. Multiple choice, short answer, and show-your-work, just like the real exam.",
-                detail: "10 per month · Graded instantly",
+                description: "A complete practice test spanning all 4 STAAR reporting categories. Multiple choice, short answer, and show-your-work — just like the real exam. Graded instantly.",
+                detail: "10 per month",
               },
               {
                 icon: BookOpen,
-                gradient: "from-emerald-500 to-teal-600",
-                shadow: "shadow-emerald-100",
+                iconBg: "bg-emerald-500/20",
+                iconColor: "text-emerald-300",
                 title: "Targeted Gap Worksheets",
-                description: "After the readiness check, one click generates a personalized worksheet for exactly the categories your child is weak in. No searching, no planning — just practice where it counts.",
-                detail: "250 per month · Ready in 30 seconds",
+                description: "One click generates a personalized worksheet for exactly the categories your child is weak in. No searching, no planning — just practice where it counts most.",
+                detail: "250 per month",
               },
               {
                 icon: TrendingUp,
-                gradient: "from-amber-500 to-orange-500",
-                shadow: "shadow-amber-100",
+                iconBg: "bg-amber-500/20",
+                iconColor: "text-amber-300",
                 title: "Track Progress to STAAR",
-                description: "Run multiple assessments over the weeks leading up to STAAR and watch the scores move. You'll always know which categories are improving and where to focus next.",
-                detail: "Across all children · All subjects",
+                description: "Run assessments weekly and watch the scores move. You'll always know which categories are improving and where to focus before test day.",
+                detail: "Across all children",
               },
             ].map((item) => (
-              <div key={item.title} className={`bg-white rounded-2xl border border-slate-100 shadow-lg ${item.shadow} p-6`}>
-                <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-4 shadow-md`}>
-                  <item.icon className="h-6 w-6 text-white" />
+              <div key={item.title} className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                <div className={`h-10 w-10 rounded-xl ${item.iconBg} flex items-center justify-center mb-4`}>
+                  <item.icon className={`h-5 w-5 ${item.iconColor}`} />
                 </div>
-                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{item.description}</p>
-                <p className="text-xs font-semibold text-slate-400">{item.detail}</p>
+                <h3 className="font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-4">{item.description}</p>
+                <p className="text-xs font-semibold text-slate-500">{item.detail}</p>
               </div>
             ))}
+          </div>
+
+          {/* Free vs Pro comparison strip */}
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Free — no credit card</p>
+              <ul className="space-y-2">
+                {[
+                  "STAAR Readiness Check (12 questions)",
+                  "Full gap report by reporting category",
+                  "Works for grades 3–8",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-slate-300">
+                    <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="sm:border-l sm:border-white/10 sm:pl-6">
+              <p className="text-xs font-semibold text-amber-400 uppercase tracking-wide mb-3">Pro — $12/month</p>
+              <ul className="space-y-2">
+                {[
+                  "STAAR Practice Tests (10/month)",
+                  "Targeted worksheets for every gap",
+                  "Progress tracking across assessments",
+                  "250 worksheets + AI Homework Help",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-slate-300">
+                    <CheckCircle className="h-4 w-4 text-amber-400 shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* CTA */}
           <div className="text-center">
             <Link href="/signup">
-              <Button size="lg" className="text-base px-8">
+              <Button size="lg" className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold text-base px-8">
                 Start with Pro — $12/month
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
-            <p className="text-sm text-muted-foreground mt-3">Cancel anytime. Less than one tutoring session.</p>
+            <p className="text-sm text-slate-500 mt-3">Cancel anytime. Less than one tutoring session.</p>
           </div>
 
         </div>
