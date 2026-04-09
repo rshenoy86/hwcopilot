@@ -10,7 +10,7 @@ const schema = z.object({
   subject: z.string().min(1),
   topic: z.string().min(1),
   difficulty: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
-  numQuestions: z.union([z.literal(6), z.literal(8), z.literal(10)]),
+  numQuestions: z.number().int().min(1).max(100),
   specialInstructions: z.string().optional(),
   theme: z.string().max(50).optional(),
   dyslexia_mode: z.boolean().optional(),
@@ -62,6 +62,15 @@ export async function POST(request: NextRequest) {
       .eq("user_id", user.id);
     profile.worksheets_generated_this_month = 0;
     profile.month_reset_date = today;
+  }
+
+  // Enforce per-worksheet question limit based on tier
+  const maxQuestions = profile.subscription_status === "free" ? 20 : 100;
+  if (parsed.data.numQuestions > maxQuestions) {
+    return NextResponse.json(
+      { error: `Free accounts can generate up to ${maxQuestions} questions per worksheet. Upgrade to Pro for up to 100.` },
+      { status: 403 }
+    );
   }
 
   // Check limit

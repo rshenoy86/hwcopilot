@@ -34,7 +34,8 @@ const DIFFICULTY_OPTIONS = [
   { value: "4", label: "Next Grade", description: "Sneak peek at next grade's concepts" },
 ];
 
-const QUESTION_COUNTS = [6, 8, 10];
+const MAX_QUESTIONS_FREE = 20;
+const MAX_QUESTIONS_PRO = 100;
 
 const THEMES_BY_GRADE_BAND: Record<string, { emoji: string; label: string }[]> = {
   "K-2": [
@@ -354,7 +355,7 @@ export default function WorksheetGeneratorForm({
   const [subject, setSubject] = useState(preselectedSubject || "");
   const [topic, setTopic] = useState(preselectedTopic || "");
   const [difficulty, setDifficulty] = useState<"1" | "2" | "3" | "4">("2");
-  const [numQuestions, setNumQuestions] = useState<6 | 8 | 10>(8);
+  const [numQuestions, setNumQuestions] = useState(10);
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [activeScaffolding, setActiveScaffolding] = useState<string[]>([]);
   const [theme, setTheme] = useState<string | null>(null);
@@ -707,22 +708,47 @@ export default function WorksheetGeneratorForm({
 
         {/* Number of questions */}
         <div className="space-y-2">
-          <Label>Number of questions</Label>
-          <div className="flex gap-2">
-            {QUESTION_COUNTS.map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => setNumQuestions(n as 6 | 8 | 10)}
-                className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-all active:scale-95 ${
-                  numQuestions === n
-                    ? "border-primary bg-accent ring-1 ring-primary"
-                    : "border-border hover:border-primary/50"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
+          <Label>
+            Number of questions{" "}
+            <span className="text-muted-foreground font-normal">
+              (max {subscriptionStatus === "free" ? MAX_QUESTIONS_FREE : MAX_QUESTIONS_PRO})
+            </span>
+          </Label>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setNumQuestions((n) => Math.max(1, n - 1))}
+              className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-lg font-medium hover:border-primary/50 active:scale-95 transition-all"
+            >
+              −
+            </button>
+            <input
+              type="number"
+              min={1}
+              max={subscriptionStatus === "free" ? MAX_QUESTIONS_FREE : MAX_QUESTIONS_PRO}
+              value={numQuestions}
+              onChange={(e) => {
+                const max = subscriptionStatus === "free" ? MAX_QUESTIONS_FREE : MAX_QUESTIONS_PRO;
+                const val = Math.min(max, Math.max(1, parseInt(e.target.value) || 1));
+                setNumQuestions(val);
+              }}
+              className="w-16 h-9 text-center text-sm font-medium rounded-lg border border-border bg-background focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const max = subscriptionStatus === "free" ? MAX_QUESTIONS_FREE : MAX_QUESTIONS_PRO;
+                setNumQuestions((n) => Math.min(max, n + 1));
+              }}
+              className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-lg font-medium hover:border-primary/50 active:scale-95 transition-all"
+            >
+              +
+            </button>
+            {subscriptionStatus === "free" && (
+              <span className="text-xs text-muted-foreground ml-1">
+                Pro unlocks up to {MAX_QUESTIONS_PRO}
+              </span>
+            )}
           </div>
         </div>
 

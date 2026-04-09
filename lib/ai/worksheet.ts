@@ -13,7 +13,7 @@ export interface WorksheetGenerationParams {
   subject: string;
   topic: string;
   difficulty: 1 | 2 | 3 | 4;
-  numQuestions: 6 | 8 | 10;
+  numQuestions: number;
   interests: string;
   theme?: string;
   specialInstructions?: string;
@@ -165,7 +165,7 @@ export async function generateWorksheet(
 
   const message = await getClient().messages.create({
     model: "claude-sonnet-4-20250514",
-    max_tokens: 4096,
+    max_tokens: 16000,
     system: buildSystemPrompt(),
     messages: [
       {
