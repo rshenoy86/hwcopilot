@@ -34,6 +34,20 @@ const FAQ = [
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
+      {/* STAAR Urgency Banner */}
+      <Link href="/signup?ref=staar-banner" className="block group">
+        <div className="bg-primary text-primary-foreground py-2.5 px-4 text-center text-sm font-medium hover:bg-primary/90 transition-colors">
+          <span className="inline-flex items-center justify-center gap-2 flex-wrap">
+            <span className="font-semibold">⏰ STAAR Exam is this Wednesday!</span>
+            <span className="opacity-80 hidden sm:inline">·</span>
+            <span className="opacity-90">Practice now and feel confident on test day</span>
+            <span className="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 transition-colors rounded-full px-3 py-0.5 font-semibold text-xs ml-1 group-hover:underline">
+              Take a free practice test <ChevronRight className="h-3 w-3" />
+            </span>
+          </span>
+        </div>
+      </Link>
+
       {/* Navigation */}
       <nav className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-40">
         <div className="container mx-auto max-w-6xl px-4 flex items-center justify-between h-16">
