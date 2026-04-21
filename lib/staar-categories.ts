@@ -83,3 +83,14 @@ export function getMastery(pct: number): {
 
 export const STAAR_TOPIC = "STAAR Math Readiness";
 export const STAAR_PRACTICE_TOPIC = "STAAR Math Practice";
+export const STAAR_WORKSHEET_TOPIC = "STAAR Math Full Test";
+
+/** Returns questions per category for a full STAAR-length worksheet */
+export function worksheetQuestionsPerCategory(grade: string): number {
+  return parseInt(grade) <= 5 ? 8 : 9;
+}
+
+/** Total questions for a full STAAR worksheet (grades 3–5 = 32, grades 6–8 = 36) */
+export function worksheetTotalQuestions(grade: string): number {
+  return worksheetQuestionsPerCategory(grade) * STAAR_MATH_CATEGORIES.length;
+}

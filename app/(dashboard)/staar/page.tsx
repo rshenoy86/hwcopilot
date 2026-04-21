@@ -12,11 +12,13 @@ import {
   ArrowRight,
   Zap,
   TrendingUp,
+  FileText,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import {
   STAAR_TOPIC,
   STAAR_PRACTICE_TOPIC,
+  STAAR_WORKSHEET_TOPIC,
   isStaarGrade,
   getMastery,
   type StaarGapReport,
@@ -41,7 +43,7 @@ export default async function StaarHubPage() {
         .from("tests")
         .select("*, children(name, id)")
         .eq("user_id", user.id)
-        .in("topic", [STAAR_TOPIC, STAAR_PRACTICE_TOPIC])
+        .in("topic", [STAAR_TOPIC, STAAR_PRACTICE_TOPIC, STAAR_WORKSHEET_TOPIC])
         .order("created_at", { ascending: false }),
       supabase
         .from("children")
@@ -69,6 +71,7 @@ export default async function StaarHubPage() {
   // Split by type
   const practiceTests = allTests.filter((t) => t.topic === STAAR_PRACTICE_TOPIC);
   const assessments = allTests.filter((t) => t.topic === STAAR_TOPIC);
+  const worksheets = allTests.filter((t) => t.topic === STAAR_WORKSHEET_TOPIC);
 
   // Build submission map for scores
   const submissionMap = new Map(submissions.map((s) => [s.test_id, s.feedback]));
@@ -182,7 +185,7 @@ export default async function StaarHubPage() {
 
           {/* Empty state — first time */}
           {allTests.length === 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link href="/staar/new">
                 <Card className="hover:border-amber-300 hover:shadow-md transition-all cursor-pointer h-full">
                   <CardContent className="p-6 space-y-3">
@@ -219,39 +222,76 @@ export default async function StaarHubPage() {
                   </CardContent>
                 </Card>
               </Link>
+
+              <Link href={isPro ? "/staar/worksheet/new" : "/billing"}>
+                <Card className={`hover:shadow-md transition-all cursor-pointer h-full ${!isPro ? "opacity-70" : "hover:border-green-200"}`}>
+                  <CardContent className="p-6 space-y-3">
+                    <div className="h-10 w-10 rounded-xl bg-green-100 flex items-center justify-center">
+                      <FileText className="h-5 w-5 text-green-700" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold">Full Test Worksheet</p>
+                        {!isPro && <Badge variant="secondary" className="text-xs">Pro</Badge>}
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        32–36 question printable test that mirrors the real STAAR exam. Includes answer key.
+                      </p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Printable · Answer key included</p>
+                  </CardContent>
+                </Card>
+              </Link>
             </div>
           )}
 
           {/* Test history */}
           {allTests.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
                 <h2 className="font-semibold text-lg">Activity</h2>
-                <Link href="/staar/new">
-                  <Button variant="outline" size="sm">
-                    <Target className="h-3.5 w-3.5 mr-1" />
-                    Readiness Check
-                  </Button>
-                </Link>
+                <div className="flex gap-2">
+                  {isPro && (
+                    <Link href="/staar/worksheet/new">
+                      <Button variant="outline" size="sm">
+                        <FileText className="h-3.5 w-3.5 mr-1" />
+                        Full Test Worksheet
+                      </Button>
+                    </Link>
+                  )}
+                  <Link href="/staar/new">
+                    <Button variant="outline" size="sm">
+                      <Target className="h-3.5 w-3.5 mr-1" />
+                      Readiness Check
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
               <div className="space-y-2">
                 {allTests.map((t) => {
                   const isAssessment = t.topic === STAAR_TOPIC;
+                  const isWorksheet = t.topic === STAAR_WORKSHEET_TOPIC;
                   const fb = submissionMap.get(t.id) as StaarGapReport | undefined;
                   const pct = fb?.overall_pct;
                   const mastery = pct !== undefined ? getMastery(pct) : null;
                   const href = isAssessment
                     ? `/staar/${t.id}${t.status === "graded" ? "/results" : ""}`
+                    : isWorksheet
+                    ? `/staar/worksheet/${t.id}`
                     : `/test-prep/${t.id}${t.status === "graded" ? "/results" : ""}`;
 
                   return (
                     <Link key={t.id} href={href}>
                       <div className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-primary/30 hover:bg-accent/50 transition-all bg-card">
                         <div className="flex items-center gap-3">
-                          <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${isAssessment ? "bg-amber-50" : "bg-primary/10"}`}>
+                          <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${
+                            isAssessment ? "bg-amber-50" : isWorksheet ? "bg-green-50" : "bg-primary/10"
+                          }`}>
                             {isAssessment
                               ? <Target className="h-5 w-5 text-amber-600" />
+                              : isWorksheet
+                              ? <FileText className="h-5 w-5 text-green-700" />
                               : <ClipboardList className="h-5 w-5 text-primary" />
                             }
                           </div>
@@ -259,11 +299,13 @@ export default async function StaarHubPage() {
                             <div className="flex items-center gap-2 flex-wrap">
                               <p className="font-semibold text-sm">
                                 {t.children?.name} —{" "}
-                                {isAssessment ? "Readiness Check" : "Practice Test"}
+                                {isAssessment ? "Readiness Check" : isWorksheet ? "Full Test Worksheet" : "Practice Test"}
                               </p>
-                              <Badge variant={t.status === "graded" ? "success" : "warning"}>
-                                {t.status === "graded" ? "Graded" : "In Progress"}
-                              </Badge>
+                              {!isWorksheet && (
+                                <Badge variant={t.status === "graded" ? "success" : "warning"}>
+                                  {t.status === "graded" ? "Graded" : "In Progress"}
+                                </Badge>
+                              )}
                               {mastery && pct !== undefined && (
                                 <span className={`text-xs font-semibold ${mastery.textColor}`}>
                                   {pct}%
@@ -272,6 +314,7 @@ export default async function StaarHubPage() {
                             </div>
                             <p className="text-xs text-muted-foreground">
                               Grade {t.grade} · {formatDate(t.created_at)}
+                              {isWorksheet && ` · ${t.total_points} questions`}
                             </p>
                           </div>
                         </div>
