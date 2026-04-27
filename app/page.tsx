@@ -81,7 +81,7 @@ export default function HomePage() {
             <span className="text-primary">shouldn&apos;t require a free afternoon</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Custom practice worksheets, AI-graded test prep, and homework help. All built around the Texas curriculum, and personalized to exactly what your child is studying right now.
+            Learning that adapts to your child — not the other way around. Practice, test prep, and homework help tailored to exactly where they are right now.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/signup">
@@ -350,7 +350,7 @@ export default function HomePage() {
                 gradient: "from-blue-500 to-indigo-600",
                 shadow: "shadow-blue-100",
                 title: "Practice Worksheets",
-                description: "Custom worksheets built around your child's exact grade, current topic, and interests. Ready to print or practice online in 30 seconds.",
+                description: "Personalized practice built around your child's exact grade, current topic, and interests. Ready to print or practice online in 30 seconds.",
                 bullets: ["K–8 all subjects", "Personalized to their interests", "Answer key included"],
               },
               {
