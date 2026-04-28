@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, BookOpen, Printer, Sparkles, ChevronRight, ClipboardList, MessageCircle, Monitor, AlertTriangle, TrendingUp, Lock } from "lucide-react";
 import Mascot from "@/components/mascot";
+import { STAARDemoCards } from "@/components/staar-demo-cards";
 
 const FAQ = [
   {
@@ -129,8 +130,8 @@ export default function HomePage() {
 
       {/* STAAR Assessment Hook */}
       <section className="py-24 px-4 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white overflow-hidden">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-12 items-center">
 
             {/* Left: Copy */}
             <div>
@@ -171,59 +172,9 @@ export default function HomePage() {
               <p className="text-slate-400 text-xs mt-3">No credit card needed. Works for grades 3–8.</p>
             </div>
 
-            {/* Right: Static mock gap report */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm text-slate-900">
-                {/* Report header */}
-                <div className="flex items-center gap-3 mb-5 pb-4 border-b border-slate-100">
-                  <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-base font-bold text-indigo-600">
-                    E
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm">Emma · 4th Grade</p>
-                    <p className="text-xs text-slate-500">STAAR Math Readiness</p>
-                  </div>
-                  <div className="ml-auto">
-                    <span className="text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">
-                      3 gaps found
-                    </span>
-                  </div>
-                </div>
-
-                {/* Skills */}
-                <div className="space-y-4 mb-5">
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Skill Mastery</p>
-                  {[
-                    { skill: "Fractions & Decimals", pct: 38, color: "bg-red-500" },
-                    { skill: "Geometry & Measurement", pct: 61, color: "bg-amber-400" },
-                    { skill: "Place Value", pct: 88, color: "bg-emerald-500" },
-                    { skill: "Data & Graphs", pct: 70, color: "bg-amber-400" },
-                  ].map((s) => (
-                    <div key={s.skill}>
-                      <div className="flex justify-between text-xs mb-1.5">
-                        <span className="font-medium text-slate-700">{s.skill}</span>
-                        <span className="text-slate-400">{s.pct}%</span>
-                      </div>
-                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div className={`h-full ${s.color} rounded-full transition-all`} style={{ width: `${s.pct}%` }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Worksheets ready */}
-                <div className="bg-indigo-50 rounded-xl p-3 flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0">
-                    <Sparkles className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-indigo-900">2 worksheets ready</p>
-                    <p className="text-xs text-indigo-600">Targeted practice for Emma&apos;s gaps</p>
-                  </div>
-                </div>
-
-                <p className="text-center text-xs text-slate-300 mt-4">Sample report · yours generates in seconds</p>
-              </div>
+            {/* Right: Animated 2-step demo cards */}
+            <div className="flex justify-center lg:justify-end w-full">
+              <STAARDemoCards />
             </div>
 
           </div>
